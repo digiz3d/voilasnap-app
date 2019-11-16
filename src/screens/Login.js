@@ -1,48 +1,36 @@
-import React, { Component } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
-  Button
-} from "react-native";
-import PropTypes from "prop-types";
+import React, { Component } from 'react'
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button } from 'react-native'
 
 class Login extends Component {
   constructor(props) {
-    super(props);
-    this.state = { login: "", password: "" };
+    super(props)
+    this.state = { login: '', password: '' }
   }
 
-  onChangeLogin = login => this.setState({ login });
+  onChangeLogin = login => this.setState({ login })
 
-  onChangePassword = password => this.setState({ password });
+  onChangePassword = password => this.setState({ password })
 
   onSubmit = () => {
-    fetch("http://192.168.0.1:3000/auth/signin", {
-      method: "POST",
+    fetch('http://192.168.0.1:3000/auth/signin', {
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         username: this.state.login,
-        password: this.state.password
-      })
+        password: this.state.password,
+      }),
     })
       .then(response => response.json())
       .then(data => console.log(data))
-      .catch(e => console.log(e));
-  };
+      .catch(e => console.log(e))
+  }
 
   render() {
     return (
-      <KeyboardAvoidingView
-        style={style.backgroundView}
-        behavior="height"
-        enabled
-      >
+      <KeyboardAvoidingView style={style.backgroundView} behavior="height" enabled>
         <View style={style.appTitle}>
           <Text style={style.appTitleText}>VoilaSnap</Text>
         </View>
@@ -71,45 +59,43 @@ class Login extends Component {
           </View>
         </View>
       </KeyboardAvoidingView>
-    );
+    )
   }
 }
 
-Login.propTypes = {
-  prop: PropTypes
-};
+Login.propTypes = {}
 
 const style = StyleSheet.create({
   appTitle: {
-    alignItems: "center",
-    padding: 10
+    alignItems: 'center',
+    padding: 10,
   },
   appTitleText: {
-    fontSize: 20
+    fontSize: 20,
   },
   description: {},
   backgroundView: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "stretch",
-    padding: 15
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    padding: 15,
   },
   loginForm: {
     borderRadius: 5,
-    marginVertical: 10
+    marginVertical: 10,
   },
   input: {
-    borderColor: "rgb(230,230,230)",
+    borderColor: 'rgb(230,230,230)',
     borderWidth: 1,
-    backgroundColor: "rgb(245,245,245)",
+    backgroundColor: 'rgb(245,245,245)',
     marginVertical: 5,
     borderRadius: 5,
-    padding: 5
+    padding: 5,
   },
   submitButton: {
-    marginVertical: 5
-  }
-});
+    marginVertical: 5,
+  },
+})
 
-export default Login;
+export default Login
