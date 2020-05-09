@@ -1,21 +1,21 @@
 import React from 'react'
-import { Text, View, Platform } from 'react-native'
+import { Text, View, Platform, ScrollView } from 'react-native'
 import Constants from 'expo-constants'
 
+const messages = []
+
 const Messages = () => (
-  <View style={{ paddingTop: Constants.statusBarHeight }}>
-    <Text>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-      been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-      galley of type and scrambled it to make a type specimen book. It has survived not only five
-      centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It
-      was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-      passages, and more recently with desktop publishing software like Aldus PageMaker including
-      versions of Lorem Ipsum.
-    </Text>
-    <View style={{ backgroundColor: 'red', flexGrow: 1 }}>
-      <Text>OK</Text>
-    </View>
+  <View style={{ paddingTop: Constants.statusBarHeight, flexGrow: 1 }}>
+    <ScrollView>
+      {messages.map((message) => (
+        <View
+          style={{ borderBottomColor: 'black', borderBottomWidth: 1, height: 50 }}
+          key={message._id}>
+          <Text>{message.content}</Text>
+        </View>
+      ))}
+    </ScrollView>
   </View>
 )
+
 export default Messages
