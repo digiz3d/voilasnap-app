@@ -35,6 +35,7 @@ class Login extends Component {
             keyboardType="email-address"
             returnKeyType="next"
             onChangeText={this.onChangeLogin}
+            autoCapitalize="none"
           />
           <TextInput
             style={style.input}
