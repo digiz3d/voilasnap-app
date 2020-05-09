@@ -9,6 +9,7 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = { login: '', password: '' }
+    this.passwordRef = React.createRef()
   }
 
   onChangeLogin = (login) => this.setState({ login })
@@ -25,7 +26,7 @@ class Login extends Component {
           <Text style={style.appTitleText}>VoilaSnap</Text>
         </View>
         <View style={style.description}>
-          <Text>Sign in because good</Text>
+          <Text>Sign in please</Text>
         </View>
         <View style={style.loginForm}>
           <TextInput
@@ -36,6 +37,8 @@ class Login extends Component {
             returnKeyType="next"
             onChangeText={this.onChangeLogin}
             autoCapitalize="none"
+            onSubmitEditing={() => this.passwordRef.current.focus()}
+            blurOnSubmit={false}
           />
           <TextInput
             style={style.input}
@@ -44,6 +47,8 @@ class Login extends Component {
             returnKeyType="done"
             secureTextEntry={true}
             onChangeText={this.onChangePassword}
+            onSubmitEditing={this.onSubmit}
+            ref={this.passwordRef}
           />
           {isError && <Text>Oulala ça va pas du tout</Text>}
           <View style={style.submitButton}>
