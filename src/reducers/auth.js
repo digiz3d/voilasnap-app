@@ -12,12 +12,12 @@ export const loginRequest = createAction('LOGIN_REQUEST')
 export const loginSuccess = createAction('LOGIN_SUCCESS')
 export const loginFailed = createAction('LOGIN_FAIL')
 
-export const login = (login, password) => async (dispatch, state) => {
+export const login = (login, password) => async (dispatch, getState) => {
   dispatch(loginRequest())
 
-  apiRequest({ url: '/auth/signin', method: 'POST', data: { username: login, password } })
-    .then(response => dispatch(loginSuccess(response)))
-    .catch(error => dispatch(loginFailed(error)))
+  apiRequest(getState, { url: '/auth/signin', method: 'POST', data: { username: login, password } })
+    .then((response) => dispatch(loginSuccess(response)))
+    .catch((error) => dispatch(loginFailed(error)))
 
   /*
   fetch('http://192.168.0.1:3000/auth/signin', {

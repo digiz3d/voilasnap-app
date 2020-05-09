@@ -1,7 +1,5 @@
-import store from '../store'
-
-export default async ({ url, method = 'GET', data = null }) => {
-  const state = store.getState()
+export default async (getState, { url, method = 'GET', data = null }) => {
+  const state = getState()
 
   const fetchParams = {
     method,
@@ -12,7 +10,7 @@ export default async ({ url, method = 'GET', data = null }) => {
   }
 
   if (state.auth.jwt) {
-    fetchParams.headers.Authorization = `Bearer ${jwt}`
+    fetchParams.headers.Authorization = `Bearer ${state.auth.jwt}`
   }
 
   if (data) {
@@ -21,14 +19,14 @@ export default async ({ url, method = 'GET', data = null }) => {
 
   console.log(fetchParams)
   try {
-    const data = await fetch(`http://192.168.0.1:3000${url}`, fetchParams)
-      .then(async response => {
+    const response = await fetch(`http://cybr.ovh:51149${url}`, fetchParams)
+      .then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
           return response
         }
         throw await response.json()
       })
-      .then(response => response.json())
+      .then((response) => response.json())
     return data
   } catch (error) {
     throw error.details

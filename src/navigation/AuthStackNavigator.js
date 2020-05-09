@@ -1,10 +1,17 @@
-import { createStackNavigator } from 'react-navigation-stack'
+import React from 'react'
+import { createStackNavigator } from '@react-navigation/stack'
 
 import Login from '../screens/Login'
 
-export default createStackNavigator(
-  {
-    Login: { screen: Login },
-  },
-  { initialRouteName: 'Login', headerMode: 'none' },
+const Stack = createStackNavigator()
+
+const AuthStackNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}>
+    <Stack.Screen name="Login" component={Login} />
+  </Stack.Navigator>
 )
+
+export default AuthStackNavigator
