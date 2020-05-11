@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
+import { Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import { Camera } from 'expo-camera'
 
 export default function App() {
@@ -19,9 +19,17 @@ export default function App() {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>
   }
+
+  const width = Dimensions.get('screen').width
+  const height = (width * 16) / 9
+
   return (
     <View style={{ flex: 1 }}>
-      <Camera style={{ flex: 1 }} type={type}>
+      <Camera
+        style={{ width, height: Math.floor(height) }}
+        type={type}
+        ratio="16:9"
+        useCamera2Api={true}>
         <View
           style={{
             flex: 1,

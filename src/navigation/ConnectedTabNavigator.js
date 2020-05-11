@@ -39,6 +39,7 @@ const ConnectedTabNavigator = () => (
       options={{
         tabBarLabel: 'Camera',
         tabBarIcon: CameraIcon,
+        unmountOnBlur: true,
       }}
     />
     <Tab.Screen
