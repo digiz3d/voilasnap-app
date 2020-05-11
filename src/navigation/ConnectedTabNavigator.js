@@ -7,6 +7,18 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const Tab = createBottomTabNavigator()
 
+const ChatIcon = ({ color, size }) => (
+  <MaterialCommunityIcons name="chat" color={color} size={size} />
+)
+
+const CameraIcon = ({ color, size }) => (
+  <MaterialCommunityIcons name="camera" color={color} size={size} />
+)
+
+const AccountIcon = ({ color, size }) => (
+  <MaterialCommunityIcons name="account" color={color} size={size} />
+)
+
 const ConnectedTabNavigator = () => (
   <Tab.Navigator
     initialRouteName="Chat"
@@ -18,9 +30,7 @@ const ConnectedTabNavigator = () => (
       component={Chat}
       options={{
         tabBarLabel: 'Chat',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="chat" color={color} size={size} />
-        ),
+        tabBarIcon: ChatIcon,
       }}
     />
     <Tab.Screen
@@ -28,9 +38,7 @@ const ConnectedTabNavigator = () => (
       component={Camera}
       options={{
         tabBarLabel: 'Camera',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="camera" color={color} size={size} />
-        ),
+        tabBarIcon: CameraIcon,
       }}
     />
     <Tab.Screen
@@ -38,9 +46,7 @@ const ConnectedTabNavigator = () => (
       component={Profile}
       options={{
         tabBarLabel: 'Profile',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="account" color={color} size={size} />
-        ),
+        tabBarIcon: AccountIcon,
       }}
     />
   </Tab.Navigator>
