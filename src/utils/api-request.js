@@ -19,7 +19,7 @@ export default async (getState, { url, method = 'GET', data = null }) => {
 
   console.log(fetchParams)
   try {
-    const response = await fetch(`http://cybr.ovh:51149${url}`, fetchParams)
+    const response = await fetch(`https://voilasnap.cf${url}`, fetchParams)
       .then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
           return response
