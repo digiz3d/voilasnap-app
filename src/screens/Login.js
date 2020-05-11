@@ -26,7 +26,7 @@ class Login extends Component {
           <Text style={style.appTitleText}>VoilaSnap</Text>
         </View>
         <View style={style.description}>
-          <Text>Sign in please</Text>
+          <Text>Sign in</Text>
         </View>
         <View style={style.loginForm}>
           <TextInput
@@ -50,7 +50,7 @@ class Login extends Component {
             onSubmitEditing={this.onSubmit}
             ref={this.passwordRef}
           />
-          {isError && <Text>Oulala ça va pas du tout</Text>}
+          {isError && <Text>Wrong password</Text>}
           <View style={style.submitButton}>
             <Button title="Sign in" onPress={this.onSubmit} />
           </View>

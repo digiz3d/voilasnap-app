@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native'
 
 import AuthLoading from '../screens/AuthLoading'
 import AuthStackNavigator from './AuthStackNavigator'
-import ConnectedStackNavigator from './ConnectedStackNavigator'
+import ConnectedTabNavigator from './ConnectedTabNavigator'
 
 const Stack = createStackNavigator()
 
@@ -23,7 +23,7 @@ const MainStackNavigator = ({ jwt }) => {
             <Stack.Screen name="AuthStack" component={AuthStackNavigator} />
           </>
         )}
-        {isConnected && <Stack.Screen name="ConnectedStack" component={ConnectedStackNavigator} />}
+        {isConnected && <Stack.Screen name="ConnectedStack" component={ConnectedTabNavigator} />}
       </Stack.Navigator>
     </NavigationContainer>
   )
