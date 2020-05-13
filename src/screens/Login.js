@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Button } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  KeyboardAvoidingView,
+  Button,
+  Image,
+} from 'react-native'
 import PropTypes from 'prop-types'
 
 import { login } from '../reducers/auth'
@@ -23,10 +31,8 @@ class Login extends Component {
     return (
       <KeyboardAvoidingView style={style.backgroundView} behavior="height" enabled>
         <View style={style.appTitle}>
+          <Image source={require('../../assets/icon.png')} style={style.logo} />
           <Text style={style.appTitleText}>VoilaSnap</Text>
-        </View>
-        <View style={style.description}>
-          <Text>Sign in</Text>
         </View>
         <View style={style.loginForm}>
           <TextInput
@@ -39,6 +45,7 @@ class Login extends Component {
             autoCapitalize="none"
             onSubmitEditing={() => this.passwordRef.current.focus()}
             blurOnSubmit={false}
+            placeholder="login"
           />
           <TextInput
             style={style.input}
@@ -49,10 +56,16 @@ class Login extends Component {
             onChangeText={this.onChangePassword}
             onSubmitEditing={this.onSubmit}
             ref={this.passwordRef}
+            placeholder="password"
           />
           {isError && <Text>Wrong password</Text>}
           <View style={style.submitButton}>
-            <Button title="Sign in" onPress={this.onSubmit} />
+            <Button
+              title="Sign in"
+              onPress={this.onSubmit}
+              style={style.submitButtonText}
+              color="white"
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -82,11 +95,16 @@ const style = StyleSheet.create({
     padding: 10,
   },
   appTitleText: {
-    fontSize: 20,
+    fontSize: 40,
+    color: 'white',
   },
-  description: {},
+  logo: {
+    height: 100,
+    width: 100,
+    marginBottom: 20,
+  },
   backgroundView: {
-    backgroundColor: 'white',
+    backgroundColor: '#293542',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
@@ -97,14 +115,21 @@ const style = StyleSheet.create({
     marginVertical: 10,
   },
   input: {
-    borderColor: 'rgb(230,230,230)',
-    borderWidth: 1,
     backgroundColor: 'rgb(245,245,245)',
-    marginVertical: 5,
-    borderRadius: 5,
-    padding: 5,
+    borderColor: 'rgb(230,230,230)',
+    borderRadius: 100,
+    borderWidth: 1,
+    fontSize: 20,
+    height: 60,
+    marginVertical: 10,
+    textAlign: 'center',
   },
   submitButton: {
-    marginVertical: 5,
+    backgroundColor: 'red',
+    borderRadius: 100,
+    height: 60,
+    justifyContent: 'center',
+    marginTop: 50,
+    marginVertical: 10,
   },
 })

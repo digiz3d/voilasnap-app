@@ -4,8 +4,7 @@ import Constants from 'expo-constants'
 
 class AuthLoading extends Component {
   componentDidMount() {
-    const { navigation } = this.props
-    setTimeout(() => navigation.navigate('AuthStack'), 2000)
+    setTimeout(() => this.props.route.params.setIsInitialized(true), 2000)
   }
 
   render() {
