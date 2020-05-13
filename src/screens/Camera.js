@@ -27,13 +27,8 @@ export default function Cam() {
     return <Text>No access to camera</Text>
   }
 
-  let width = availableSpace.width
-  let height = (width * FORMAT_HEIGHT) / FORMAT_WIDTH
-
-  if (height < availableSpace.height) {
-    height = availableSpace.height
-    width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
-  }
+  const height = availableSpace.height
+  const width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
 
   const canRenderCamera = !!(availableSpace.width && availableSpace.height)
 
