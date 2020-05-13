@@ -7,7 +7,7 @@ const FORMAT_WIDTH = 9
 
 export default function Cam() {
   const [hasPermission, setHasPermission] = useState(null)
-  const [type, setType] = useState(Camera.Constants.Type.back)
+  const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
   const cameraRef = useRef()
 
@@ -47,7 +47,7 @@ export default function Cam() {
       {canRenderCamera && (
         <Camera
           style={{ width, height: Math.floor(height) }}
-          type={type}
+          type={cameraSide}
           ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
           useCamera2Api={true}
           ref={cameraRef}>
@@ -64,8 +64,8 @@ export default function Cam() {
                 alignItems: 'center',
               }}
               onPress={() => {
-                setType(
-                  type === Camera.Constants.Type.back
+                setCameraSide(
+                  cameraSide === Camera.Constants.Type.back
                     ? Camera.Constants.Type.front
                     : Camera.Constants.Type.back,
                 )

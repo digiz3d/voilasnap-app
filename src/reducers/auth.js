@@ -1,4 +1,4 @@
-import { createAction, handleActions } from 'redux-actions'
+import { createAction, createReducer } from '@reduxjs/toolkit'
 import apiRequest from '../utils/api-request'
 
 const initialState = {
@@ -14,10 +14,11 @@ export const loginFailed = createAction('LOGIN_FAIL')
 
 export const login = (login, password) => async (dispatch, getState) => {
   dispatch(loginRequest())
+  dispatch(loginSuccess({ token: 'ui' }))
 
-  apiRequest(getState, { url: '/auth/signin', method: 'POST', data: { username: login, password } })
-    .then((response) => dispatch(loginSuccess(response)))
-    .catch((error) => dispatch(loginFailed(error)))
+  // apiRequest(getState, { url: '/auth/signin', method: 'POST', data: { username: login, password } })
+  //   .then((response) => dispatch(loginSuccess(response)))
+  //   .catch((error) => dispatch(loginFailed(error)))
 
   /*
   fetch('http://192.168.0.1:3000/auth/signin', {
@@ -43,17 +44,16 @@ export const login = (login, password) => async (dispatch, getState) => {
     */
 }
 
-export default handleActions(
-  {
-    [loginRequest](state) {
-      return { ...state, isLoading: true, isError: false, error: null }
-    },
-    [loginSuccess](state, { payload }) {
-      return { ...state, isLoading: false, isError: false, jwt: payload.token, error: null }
-    },
-    [loginFailed](state, { payload }) {
-      return { ...state, isLoading: false, isError: true, jwt: null, error: payload }
-    },
+const authReducer = createReducer(initialState, {
+  [loginRequest](state) {
+    return { ...state, isLoading: true, isError: false, error: null }
   },
-  initialState,
-)
+  [loginSuccess](state, { payload }) {
+    return { ...state, isLoading: false, isError: false, jwt: payload.token, error: null }
+  },
+  [loginFailed](state, { payload }) {
+    return { ...state, isLoading: false, isError: true, jwt: null, error: payload }
+  },
+})
+
+export default authReducer
