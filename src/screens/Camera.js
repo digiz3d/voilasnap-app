@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text, View, TouchableOpacity } from 'react-native'
 import { Camera } from 'expo-camera'
 
-const FORMAT_HEIGHT = 16
-const FORMAT_WIDTH = 9
+const FORMAT_HEIGHT = 4
+const FORMAT_WIDTH = 3
 
 export default function Cam() {
   const [hasPermission, setHasPermission] = useState(null)
@@ -17,6 +17,8 @@ export default function Cam() {
       setHasPermission(status === 'granted')
     })()
   }, [])
+
+  console.log(cameraSide)
 
   if (hasPermission === null) {
     return <View />
@@ -45,22 +47,29 @@ export default function Cam() {
         })
       }>
       {canRenderCamera && (
-        <Camera
-          style={{ width, height: Math.floor(height) }}
-          type={cameraSide}
-          ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
-          useCamera2Api={true}
-          ref={cameraRef}>
+        <>
+          <Camera
+            style={{
+              width,
+              height: Math.floor(height),
+              position: 'absolute',
+              left: -((width - availableSpace.width) / 2),
+            }}
+            type={cameraSide}
+            ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
+            ref={cameraRef}
+          />
           <View
             style={{
               flex: 1,
               backgroundColor: 'transparent',
               flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
             }}>
             <TouchableOpacity
               style={{
                 flex: 0.1,
-                alignSelf: 'flex-end',
                 alignItems: 'center',
               }}
               onPress={() => {
@@ -72,8 +81,11 @@ export default function Cam() {
               }}>
               <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Flip</Text>
             </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Take picture</Text>
+            </TouchableOpacity>
           </View>
-        </Camera>
+        </>
       )}
     </View>
   )
