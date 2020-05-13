@@ -12,6 +12,7 @@ import {
 import PropTypes from 'prop-types'
 
 import { login } from '../reducers/auth'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 class Login extends Component {
   constructor(props) {
@@ -59,14 +60,12 @@ class Login extends Component {
             placeholder="password"
           />
           {isError && <Text>Wrong password</Text>}
-          <View style={style.submitButton}>
-            <Button
-              title="Sign in"
-              onPress={this.onSubmit}
-              style={style.submitButtonText}
-              color="white"
-            />
-          </View>
+          <TouchableHighlight
+            style={style.submitButton}
+            onPress={this.onSubmit}
+            underlayColor="firebrick">
+            <Text style={style.submitButtonText}>Sign in</Text>
+          </TouchableHighlight>
         </View>
       </KeyboardAvoidingView>
     )
@@ -131,5 +130,10 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 50,
     marginVertical: 10,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
   },
 })
