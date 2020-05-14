@@ -1,13 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
+import { SplashScreen } from 'expo'
 
-import store from './src/store'
+import store from './src/reducers'
 import MainStackNavigator from './src/navigation/MainStackNavigator'
+import AuthLoading from './src/screens/AuthLoading'
 
 function App() {
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    try {
+      SplashScreen.preventAutoHide()
+    } catch (e) {
+      console.warn(e)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isReady) SplashScreen.hide()
+  }, [isReady])
+
   return (
     <Provider store={store}>
-      <MainStackNavigator />
+      {!isReady && <AuthLoading setIsReady={setIsReady} />}
+      {isReady && <MainStackNavigator />}
     </Provider>
   )
 }

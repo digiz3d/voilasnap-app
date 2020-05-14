@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
-  Button,
-  Image,
-} from 'react-native'
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native'
 import PropTypes from 'prop-types'
 
 import { login } from '../reducers/auth'
@@ -37,32 +29,32 @@ class Login extends Component {
         </View>
         <View style={style.loginForm}>
           <TextInput
+            autoCapitalize="none"
+            autoCompleteType="email"
+            blurOnSubmit={false}
+            keyboardType="email-address"
+            onChangeText={this.onChangeLogin}
+            onSubmitEditing={() => this.passwordRef.current.focus()}
+            placeholder="login"
+            returnKeyType="next"
             style={style.input}
             textContentType="emailAddress"
-            autoCompleteType="email"
-            keyboardType="email-address"
-            returnKeyType="next"
-            onChangeText={this.onChangeLogin}
-            autoCapitalize="none"
-            onSubmitEditing={() => this.passwordRef.current.focus()}
-            blurOnSubmit={false}
-            placeholder="login"
           />
           <TextInput
-            style={style.input}
-            textContentType="password"
             autoCompleteType="password"
-            returnKeyType="done"
-            secureTextEntry={true}
             onChangeText={this.onChangePassword}
             onSubmitEditing={this.onSubmit}
-            ref={this.passwordRef}
             placeholder="password"
+            ref={this.passwordRef}
+            returnKeyType="done"
+            secureTextEntry={true}
+            style={style.input}
+            textContentType="password"
           />
           {isError && <Text>Wrong password</Text>}
           <TouchableHighlight
-            style={style.submitButton}
             onPress={this.onSubmit}
+            style={style.submitButton}
             underlayColor="firebrick">
             <Text style={style.submitButtonText}>Sign in</Text>
           </TouchableHighlight>
