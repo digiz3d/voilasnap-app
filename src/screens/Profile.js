@@ -1,13 +1,28 @@
 import React from 'react'
-import { Text, View, Platform, ScrollView } from 'react-native'
-import Constants from 'expo-constants'
+import { Button, Text, View } from 'react-native'
+import { connect } from 'react-redux'
+import { selectMe } from '../reducers/users'
+import { logout } from '../reducers/auth'
 
-function Profile() {
+function Profile({ isLoading, logout, me }) {
+  if (isLoading)
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading</Text>
+      </View>
+    )
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Your profile informations</Text>
+      <Text>{me.username}</Text>
+      <Button onPress={() => logout()} title="Log out" />
     </View>
   )
 }
 
-export default Profile
+const mapStateToProps = (state) => ({
+  isLoading: state.users.meIsLoading,
+  me: selectMe(state),
+})
+const mapDispatchToProps = { logout }
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

@@ -17,17 +17,12 @@ export default async (getState, { url, method = 'GET', data = null }) => {
     fetchParams.body = JSON.stringify(data)
   }
 
-  try {
-    const response = await fetch(`https://voilasnap.cf${url}`, fetchParams)
-      .then(async (response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return response
-        }
-        throw await response.json()
-      })
-      .then((response) => response.json())
-    return data
-  } catch (error) {
-    throw error.details
-  }
+  return fetch(`https://voilasnap.cf${url}`, fetchParams)
+    .then(async (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      }
+      throw await response.json()
+    })
+    .then((response) => response.json())
 }

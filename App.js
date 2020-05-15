@@ -13,7 +13,7 @@ function App() {
     try {
       SplashScreen.preventAutoHide()
     } catch (e) {
-      console.warn(e)
+      console.log(e)
     }
     if (isReady) SplashScreen.hide()
   }, [isReady])

@@ -51,7 +51,7 @@ class Login extends Component {
             style={style.input}
             textContentType="password"
           />
-          {isError && <Text>Wrong password</Text>}
+          {isError && <Text style={style.errorMessage}>Wrong password</Text>}
           <TouchableHighlight
             onPress={this.onSubmit}
             style={style.submitButton}
@@ -113,6 +113,11 @@ const style = StyleSheet.create({
     fontSize: 20,
     height: 60,
     marginVertical: 10,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 18,
     textAlign: 'center',
   },
   submitButton: {
