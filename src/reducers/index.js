@@ -1,7 +1,11 @@
-import { combineReducers } from 'redux'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import auth from './auth'
+import snaps from './snaps'
 
-export default combineReducers({
+const reducer = combineReducers({
   auth,
+  snaps,
 })
+
+export default configureStore({ reducer })

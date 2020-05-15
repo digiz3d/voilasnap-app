@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Text, View, TouchableOpacity } from 'react-native'
 import { Camera } from 'expo-camera'
 
-export default function App() {
+const FORMAT_HEIGHT = 4
+const FORMAT_WIDTH = 3
+
+export default function Cam() {
   const [hasPermission, setHasPermission] = useState(null)
-  const [type, setType] = useState(Camera.Constants.Type.back)
+  const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
+  const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
+  const cameraRef = useRef()
 
   useEffect(() => {
     ;(async () => {
@@ -13,6 +18,8 @@ export default function App() {
     })()
   }, [])
 
+  console.log(cameraSide)
+
   if (hasPermission === null) {
     return <View />
   }
@@ -20,39 +27,61 @@ export default function App() {
     return <Text>No access to camera</Text>
   }
 
-  const width = Dimensions.get('screen').width
-  const height = (width * 16) / 9
+  const height = availableSpace.height
+  const width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
+
+  const canRenderCamera = !!(availableSpace.width && availableSpace.height)
 
   return (
-    <View style={{ flex: 1 }}>
-      <Camera
-        style={{ width, height: Math.floor(height) }}
-        type={type}
-        ratio="16:9"
-        useCamera2Api={true}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-          }}>
-          <TouchableOpacity
+    <View
+      style={{ flex: 1 }}
+      onLayout={(e) =>
+        setAvailableSpace({
+          height: e.nativeEvent.layout.height,
+          width: e.nativeEvent.layout.width,
+        })
+      }>
+      {canRenderCamera && (
+        <>
+          <Camera
             style={{
-              flex: 0.1,
-              alignSelf: 'flex-end',
-              alignItems: 'center',
+              width,
+              height: Math.floor(height),
+              position: 'absolute',
+              left: -((width - availableSpace.width) / 2),
             }}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back,
-              )
+            type={cameraSide}
+            ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
+            ref={cameraRef}
+          />
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
             }}>
-            <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+            <TouchableOpacity
+              style={{
+                flex: 0.1,
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                setCameraSide(
+                  cameraSide === Camera.Constants.Type.back
+                    ? Camera.Constants.Type.front
+                    : Camera.Constants.Type.back,
+                )
+              }}>
+              <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Flip</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Take picture</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   )
 }

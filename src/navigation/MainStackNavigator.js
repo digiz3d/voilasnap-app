@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 
-import AuthLoading from '../screens/AuthLoading'
 import AuthStackNavigator from './AuthStackNavigator'
 import ConnectedTabNavigator from './ConnectedTabNavigator'
 
@@ -17,13 +16,11 @@ const MainStackNavigator = ({ jwt }) => {
         screenOptions={{
           headerShown: false,
         }}>
-        {!isConnected && (
-          <>
-            <Stack.Screen name="AuthLoading" component={AuthLoading} />
-            <Stack.Screen name="AuthStack" component={AuthStackNavigator} />
-          </>
+        {isConnected ? (
+          <Stack.Screen name="ConnectedTab" component={ConnectedTabNavigator} />
+        ) : (
+          <Stack.Screen name="AuthStack" component={AuthStackNavigator} />
         )}
-        {isConnected && <Stack.Screen name="ConnectedStack" component={ConnectedTabNavigator} />}
       </Stack.Navigator>
     </NavigationContainer>
   )

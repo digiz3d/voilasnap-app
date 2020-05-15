@@ -1,20 +1,21 @@
-import React, { Component } from 'react'
-import { View, Text } from 'react-native'
-import Constants from 'expo-constants'
+import { connect } from 'react-redux'
+import { useEffect } from 'react'
 
-class AuthLoading extends Component {
-  componentDidMount() {
-    const { navigation } = this.props
-    setTimeout(() => navigation.navigate('AuthStack'), 2000)
-  }
+import { loginUsingLocalstorage } from '../reducers/auth'
 
-  render() {
-    return (
-      <View style={{ paddingTop: Constants.statusBarHeight, flexGrow: 1 }}>
-        <Text>Loading</Text>
-      </View>
-    )
-  }
+const AuthLoading = ({ login, setIsReady, isLoginReady }) => {
+  useEffect(() => {
+    login()
+  }, [])
+
+  useEffect(() => {
+    console.log('isLoginReady', isLoginReady)
+    if (isLoginReady) setIsReady(true)
+  }, [isLoginReady])
+
+  return null
 }
 
-export default AuthLoading
+export default connect((state) => ({ isLoginReady: state.auth.isReady }), {
+  login: loginUsingLocalstorage,
+})(AuthLoading)
