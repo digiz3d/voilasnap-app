@@ -15,16 +15,12 @@ function App() {
     } catch (e) {
       console.warn(e)
     }
-  }, [])
-
-  useEffect(() => {
     if (isReady) SplashScreen.hide()
   }, [isReady])
 
   return (
     <Provider store={store}>
-      {!isReady && <AuthLoading setIsReady={setIsReady} />}
-      {isReady && <MainStackNavigator />}
+      {isReady ? <MainStackNavigator /> : <AuthLoading setIsReady={setIsReady} />}
     </Provider>
   )
 }

@@ -9,7 +9,6 @@ const AuthLoading = ({ login, setIsReady, isLoginReady }) => {
   }, [])
 
   useEffect(() => {
-    console.log('isLoginReady', isLoginReady)
     if (isLoginReady) setIsReady(true)
   }, [isLoginReady])
 

@@ -18,8 +18,6 @@ export default function Cam() {
     })()
   }, [])
 
-  console.log(cameraSide)
-
   if (hasPermission === null) {
     return <View />
   }

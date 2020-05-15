@@ -17,7 +17,6 @@ export default async (getState, { url, method = 'GET', data = null }) => {
     fetchParams.body = JSON.stringify(data)
   }
 
-  console.log(fetchParams)
   try {
     const response = await fetch(`https://voilasnap.cf${url}`, fetchParams)
       .then(async (response) => {
