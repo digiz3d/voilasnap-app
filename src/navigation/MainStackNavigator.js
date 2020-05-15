@@ -16,8 +16,11 @@ const MainStackNavigator = ({ jwt }) => {
         screenOptions={{
           headerShown: false,
         }}>
-        {!isConnected && <Stack.Screen name="AuthStack" component={AuthStackNavigator} />}
-        {isConnected && <Stack.Screen name="ConnectedTab" component={ConnectedTabNavigator} />}
+        {isConnected ? (
+          <Stack.Screen name="ConnectedTab" component={ConnectedTabNavigator} />
+        ) : (
+          <Stack.Screen name="AuthStack" component={AuthStackNavigator} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   )
