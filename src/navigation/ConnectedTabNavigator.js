@@ -1,5 +1,9 @@
 import { connect } from 'react-redux'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { SafeAreaView } from 'react-native'
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBar,
+} from '@react-navigation/material-top-tabs'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect } from 'react'
 
@@ -8,18 +12,18 @@ import Camera from '../screens/Camera'
 import Chat from '../screens/Chat'
 import Profile from '../screens/Profile'
 
-const Tab = createBottomTabNavigator()
+const Tab = createMaterialTopTabNavigator()
 
-const ChatIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="chat" color={color} size={size} />
-)
+const ChatIcon = ({ color }) => <MaterialCommunityIcons name="chat" color={color} size={20} />
 
-const CameraIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="camera" color={color} size={size} />
-)
+const CameraIcon = ({ color }) => <MaterialCommunityIcons name="camera" color={color} size={20} />
 
-const AccountIcon = ({ color, size }) => (
-  <MaterialCommunityIcons name="account" color={color} size={size} />
+const AccountIcon = ({ color }) => <MaterialCommunityIcons name="account" color={color} size={20} />
+
+const SafeAreaMaterialTopTabBar = ({ children, ...props }) => (
+  <SafeAreaView style={{ backgroundColor: '#ffffff' }}>
+    <MaterialTopTabBar {...props} style={{ shadowOpacity: 0 }} />
+  </SafeAreaView>
 )
 
 const ConnectedTabNavigator = ({ getMe }) => {
@@ -29,9 +33,14 @@ const ConnectedTabNavigator = ({ getMe }) => {
 
   return (
     <Tab.Navigator
+      keyboardDismissMode="on-drag"
       initialRouteName="Chat"
+      tabBar={SafeAreaMaterialTopTabBar}
+      tabBarPosition="bottom"
       tabBarOptions={{
         activeTintColor: '#e91e63',
+        showIcon: true,
+        showLabel: false,
       }}>
       <Tab.Screen
         name="Chat"
