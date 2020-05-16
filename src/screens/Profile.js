@@ -1,21 +1,23 @@
-import React from 'react'
-import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-import { selectMe, selectMyFriends } from '../reducers/users'
+import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View, ScrollView } from 'react-native'
+import Constants from 'expo-constants'
+import React from 'react'
+
 import { logout } from '../reducers/auth'
+import { selectMe, selectMyFriends } from '../reducers/users'
 import { version } from '../../package.json'
 import FriendsList from '../components/FriendsList'
 
 function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
   if (isMeLoading || !me)
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={style.screen}>
         <Text>Loading</Text>
       </SafeAreaView>
     )
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={style.screen}>
       <View style={[style.card, style.cardHeader]}>
         <Text style={style.accountUsername}>{me.username}</Text>
         <TouchableHighlight
@@ -54,6 +56,10 @@ const mapDispatchToProps = { logout }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const style = StyleSheet.create({
+  screen: {
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+  },
   card: {
     backgroundColor: '#fff',
     borderColor: '#ccc',

@@ -20,7 +20,6 @@ export const fetchMe = createAsyncThunk('users/get-me', async (_, { getState }) 
 
 export const fetchFriends = createAsyncThunk('friends/get-friends', async (_, { getState }) => {
   const res = await apiRequest(getState, { url: '/friends' })
-  console.log(res.friends)
   return res.friends
 })
 
