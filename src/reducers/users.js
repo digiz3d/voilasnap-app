@@ -1,6 +1,8 @@
 import { createAsyncThunk, createReducer, createSelector } from '@reduxjs/toolkit'
 import apiRequest from '../utils/api-request'
 
+import { setIsUserSearchMode } from './ui'
+
 const initialState = {
   byId: {},
   error: null,
@@ -28,13 +30,11 @@ export const fetchFriends = createAsyncThunk('friends/get-friends', async (_, { 
 
 export const searchUsers = createAsyncThunk('users/search', async (username, { getState }) => {
   if (username.length < 3) return []
-  console.log('making request')
   const res = await apiRequest(getState, {
     url: '/users/search',
     method: 'POST',
     data: { username },
   })
-  console.log('request done', res)
   return res.payload
 })
 
@@ -93,6 +93,9 @@ const usersReducer = createReducer(initialState, {
   },
   [searchUsers.rejected](state, { payload }) {
     return { ...state, isErrorSearch: true, isLoadingSearch: false, error: payload }
+  },
+  [setIsUserSearchMode](state) {
+    return { ...state, searchList: [] }
   },
 })
 

@@ -12,6 +12,7 @@ import Constants from 'expo-constants'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { logout } from '../reducers/auth'
+import { setIsUserSearchMode, selectIsUserSearchMode } from '../reducers/ui'
 import { searchUsers, selectMe, selectMyFriends, selectSearchedUsers } from '../reducers/users'
 import { version } from '../../package.json'
 import FriendsList from '../components/FriendsList'
@@ -32,8 +33,17 @@ function debounce(func) {
   }
 }
 
-function Profile({ friends, isLoadingFriendsList, isLoadingMe, logout, me, searchUsers, users }) {
-  const [searchFriendsMode, setSearchFriendsMode] = useState(false)
+function Profile({
+  friends,
+  isLoadingFriendsList,
+  isLoadingMe,
+  isUserSearchMode,
+  logout,
+  me,
+  searchUsers,
+  setIsUserSearchMode,
+  users,
+}) {
   const [logoutConfirm, setLogoutConfirm] = useState(false)
   const cancelLogoutTimer = useRef(null)
   const delayedSearch = useRef(debounce(searchUsers)).current
@@ -46,7 +56,7 @@ function Profile({ friends, isLoadingFriendsList, isLoadingMe, logout, me, searc
 
   const toggleSearchFriendsMode = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setSearchFriendsMode(!searchFriendsMode)
+    setIsUserSearchMode(!isUserSearchMode)
   }
 
   const logoutClick = () => {
@@ -64,7 +74,7 @@ function Profile({ friends, isLoadingFriendsList, isLoadingMe, logout, me, searc
       </SafeAreaView>
     )
 
-  if (searchFriendsMode) {
+  if (isUserSearchMode) {
     return (
       <SafeAreaView style={style.screen}>
         {/* the fragments are needed so react can compare */}
@@ -126,10 +136,11 @@ const mapStateToProps = (state) => ({
   friends: selectMyFriends(state),
   isLoadingFriendsList: state.users.isLoadingFriendsList,
   isLoadingMe: state.users.meIsLoading,
+  isUserSearchMode: selectIsUserSearchMode(state),
   me: selectMe(state),
   users: selectSearchedUsers(state),
 })
-const mapDispatchToProps = { searchUsers, logout }
+const mapDispatchToProps = { logout, searchUsers, setIsUserSearchMode }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const style = StyleSheet.create({
