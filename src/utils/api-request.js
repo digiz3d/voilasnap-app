@@ -1,3 +1,5 @@
+import { version } from '../../package.json'
+
 export default async (getState, { url, method = 'GET', data = null }) => {
   const state = getState()
 
@@ -12,6 +14,8 @@ export default async (getState, { url, method = 'GET', data = null }) => {
   if (state.auth.jwt) {
     fetchParams.headers.Authorization = `Bearer ${state.auth.jwt}`
   }
+
+  fetchParams.headers['Client-Version'] = version
 
   if (data) {
     fetchParams.body = JSON.stringify(data)
