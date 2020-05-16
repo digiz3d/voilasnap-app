@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native'
-import { createAction, createReducer } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 import apiRequest from '../utils/api-request'
 import { getMe } from './users'
 
@@ -15,7 +15,7 @@ export const loginRequest = createAction('LOGIN_REQUEST')
 export const loginSuccess = createAction('LOGIN_SUCCESS')
 export const loginFailed = createAction('LOGIN_FAIL')
 export const loginReady = createAction('LOGIN_READY')
-export const logout = createAction('LOGOUT')
+export const logout = createAsyncThunk('auth/logout', async () => AsyncStorage.removeItem('jwt'))
 
 export const loginUsingLocalstorage = () => async (dispatch, getState) => {
   const localJwt = await AsyncStorage.getItem('jwt')
@@ -55,7 +55,7 @@ const authReducer = createReducer(initialState, {
   [loginReady](state) {
     return { ...state, isReady: true }
   },
-  [logout](state) {
+  [logout.fulfilled](state) {
     return { ...state, jwt: null }
   },
 })
