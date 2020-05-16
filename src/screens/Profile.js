@@ -5,7 +5,7 @@ import { selectMe } from '../reducers/users'
 import { logout } from '../reducers/auth'
 
 function Profile({ isLoading, logout, me }) {
-  if (isLoading)
+  if (isLoading || !me)
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Loading</Text>

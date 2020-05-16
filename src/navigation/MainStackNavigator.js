@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
@@ -10,7 +10,6 @@ const Stack = createStackNavigator()
 
 const MainStackNavigator = ({ jwt }) => {
   const isConnected = jwt !== null
-
   return (
     <NavigationContainer>
       <Stack.Navigator

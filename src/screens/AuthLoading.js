@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 
 import { loginUsingLocalstorage } from '../reducers/auth'
 
-const AuthLoading = ({ login, setIsReady, isLoginReady }) => {
+const AuthLoading = ({ loginUsingLocalstorage, setIsReady, isLoginReady }) => {
   useEffect(() => {
-    login()
+    loginUsingLocalstorage()
   }, [])
 
   useEffect(() => {
@@ -16,5 +16,5 @@ const AuthLoading = ({ login, setIsReady, isLoginReady }) => {
 }
 
 export default connect((state) => ({ isLoginReady: state.auth.isReady }), {
-  login: loginUsingLocalstorage,
+  loginUsingLocalstorage,
 })(AuthLoading)

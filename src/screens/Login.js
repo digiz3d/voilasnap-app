@@ -17,7 +17,7 @@ class Login extends Component {
 
   onChangePassword = (password) => this.setState({ password })
 
-  onSubmit = () => this.props.login(this.state.login, this.state.password)
+  onSubmit = () => this.props.login({ login: this.state.login, password: this.state.password })
 
   render() {
     const { isError } = this.props

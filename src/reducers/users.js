@@ -8,10 +8,10 @@ const initialState = {
   isLoading: false,
   me: null,
   meIsError: null,
-  meIsLoading: false,
+  meIsLoading: true,
 }
 
-export const getMe = createAsyncThunk('USERS_GET_ME', async (_, { getState }) =>
+export const getMe = createAsyncThunk('users/get-me', async (_, { getState }) =>
   apiRequest(getState, { url: '/auth/me' }),
 )
 
