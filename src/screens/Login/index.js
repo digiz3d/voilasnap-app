@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 
-import { login } from '../reducers/auth'
-import { TouchableHighlight } from 'react-native-gesture-handler'
+import { login } from '../../reducers/auth'
 
 class Login extends Component {
   constructor(props) {
@@ -24,7 +31,7 @@ class Login extends Component {
     return (
       <KeyboardAvoidingView style={style.backgroundView} behavior="height" enabled>
         <View style={style.appTitle}>
-          <Image source={require('../../assets/icon.png')} style={style.logo} />
+          <Image source={require('../../../assets/icon.png')} style={style.logo} />
           <Text style={style.appTitleText}>VoilaSnap</Text>
         </View>
         <View style={style.loginForm}>

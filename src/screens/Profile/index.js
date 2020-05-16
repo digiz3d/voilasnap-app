@@ -11,13 +11,13 @@ import {
 import Constants from 'expo-constants'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { logout } from '../reducers/auth'
-import { setIsUserSearchMode, selectIsUserSearchMode } from '../reducers/ui'
-import { searchUsers, selectMe, selectMyFriends, selectSearchedUsers } from '../reducers/users'
-import { version } from '../../package.json'
-import FriendsList from '../components/FriendsList'
-import UserSearchInput from '../components/UserSearchInput'
-import UserSearchResults from '../components/UserSearchResults'
+import { logout } from '../../reducers/auth'
+import { setIsUserSearchMode, selectIsUserSearchMode } from '../../reducers/ui'
+import { searchUsers, selectMe } from '../../reducers/users'
+import { version } from '../../../package.json'
+import FriendsList from './containers/FriendsList'
+import UserSearchInput from '../../components/UserSearchInput'
+import UserSearchResults from './containers/UserSearchResults'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -33,17 +33,7 @@ function debounce(func) {
   }
 }
 
-function Profile({
-  friends,
-  isLoadingFriendsList,
-  isLoadingMe,
-  isUserSearchMode,
-  logout,
-  me,
-  searchUsers,
-  setIsUserSearchMode,
-  users,
-}) {
+function Profile({ isLoadingMe, isUserSearchMode, logout, me, searchUsers, setIsUserSearchMode }) {
   const [logoutConfirm, setLogoutConfirm] = useState(false)
   const cancelLogoutTimer = useRef(null)
   const delayedSearch = useRef(debounce(searchUsers)).current
@@ -70,7 +60,7 @@ function Profile({
   if (isLoadingMe || !me)
     return (
       <SafeAreaView style={style.screen}>
-        <Text>Loading</Text>
+        <Text>Loading me</Text>
       </SafeAreaView>
     )
 
@@ -91,7 +81,7 @@ function Profile({
           </View>
           <UserSearchInput onChangeText={(text) => delayedSearch(text)} />
         </View>
-        <UserSearchResults users={users} />
+        <UserSearchResults />
         <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
           <Text>{version}</Text>
         </View>
@@ -122,7 +112,7 @@ function Profile({
             <Text style={style.friendsAddButtonText}>Add</Text>
           </TouchableHighlight>
         </View>
-        <FriendsList friends={friends} isLoading={isLoadingFriendsList} />
+        <FriendsList />
       </View>
       <></>
       <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
@@ -133,12 +123,9 @@ function Profile({
 }
 
 const mapStateToProps = (state) => ({
-  friends: selectMyFriends(state),
-  isLoadingFriendsList: state.users.isLoadingFriendsList,
-  isLoadingMe: state.users.meIsLoading,
+  isLoadingMe: state.users.isLoadingMe,
   isUserSearchMode: selectIsUserSearchMode(state),
   me: selectMe(state),
-  users: selectSearchedUsers(state),
 })
 const mapDispatchToProps = { logout, searchUsers, setIsUserSearchMode }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
