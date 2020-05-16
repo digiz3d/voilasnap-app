@@ -1,12 +1,13 @@
 import { connect } from 'react-redux'
 import {
   LayoutAnimation,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableHighlight,
-  View,
   UIManager,
+  View,
 } from 'react-native'
 import Constants from 'expo-constants'
 import React, { useEffect, useRef, useState } from 'react'
@@ -82,7 +83,7 @@ function Profile({ isLoadingMe, isUserSearchMode, logout, me, searchUsers, setIs
           <UserSearchInput onChangeText={(text) => delayedSearch(text)} />
         </View>
         <UserSearchResults />
-        <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
+        <View style={style.version}>
           <Text>{version}</Text>
         </View>
       </SafeAreaView>
@@ -115,7 +116,7 @@ function Profile({ isLoadingMe, isUserSearchMode, logout, me, searchUsers, setIs
         <FriendsList />
       </View>
       <></>
-      <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
+      <View style={style.version}>
         <Text>{version}</Text>
       </View>
     </SafeAreaView>
@@ -160,5 +161,10 @@ const style = StyleSheet.create({
   },
   friendsAddButtonText: {
     color: '#009',
+  },
+  version: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
   },
 })
