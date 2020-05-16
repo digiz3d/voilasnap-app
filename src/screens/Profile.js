@@ -6,26 +6,37 @@ import {
   Text,
   TouchableHighlight,
   View,
-  ScrollView,
   UIManager,
 } from 'react-native'
 import Constants from 'expo-constants'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { logout } from '../reducers/auth'
-import { selectMe, selectMyFriends } from '../reducers/users'
+import { searchUsers, selectMe, selectMyFriends, selectSearchedUsers } from '../reducers/users'
 import { version } from '../../package.json'
 import FriendsList from '../components/FriendsList'
-import UserSearch from '../components/UserSearch'
+import UserSearchInput from '../components/UserSearchInput'
+import UserSearchResults from '../components/UserSearchResults'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
-function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
+function debounce(func) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func.apply(this, args)
+    }, 300)
+  }
+}
+
+function Profile({ friends, isLoadingFriendsList, isLoadingMe, logout, me, searchUsers, users }) {
   const [searchFriendsMode, setSearchFriendsMode] = useState(false)
   const [logoutConfirm, setLogoutConfirm] = useState(false)
   const cancelLogoutTimer = useRef(null)
+  const delayedSearch = useRef(debounce(searchUsers)).current
 
   useEffect(() => {
     return () => {
@@ -46,7 +57,7 @@ function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
     }
   }
 
-  if (isMeLoading || !me)
+  if (isLoadingMe || !me)
     return (
       <SafeAreaView style={style.screen}>
         <Text>Loading</Text>
@@ -68,8 +79,9 @@ function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
               <Text style={style.accountLogoutButtonText}>Back</Text>
             </TouchableHighlight>
           </View>
-          <UserSearch />
+          <UserSearchInput onChangeText={(text) => delayedSearch(text)} />
         </View>
+        <UserSearchResults users={users} />
         <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
           <Text>{version}</Text>
         </View>
@@ -100,8 +112,9 @@ function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
             <Text style={style.friendsAddButtonText}>Add</Text>
           </TouchableHighlight>
         </View>
-        <FriendsList friends={friends} isLoading={isFriendsListLoading} />
+        <FriendsList friends={friends} isLoading={isLoadingFriendsList} />
       </View>
+      <></>
       <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
         <Text>{version}</Text>
       </View>
@@ -111,11 +124,12 @@ function Profile({ isFriendsListLoading, isMeLoading, logout, me, friends }) {
 
 const mapStateToProps = (state) => ({
   friends: selectMyFriends(state),
-  isFriendsListLoading: state.users.isFriendsListLoading,
-  isMeLoading: state.users.meIsLoading,
+  isLoadingFriendsList: state.users.isLoadingFriendsList,
+  isLoadingMe: state.users.meIsLoading,
   me: selectMe(state),
+  users: selectSearchedUsers(state),
 })
-const mapDispatchToProps = { logout }
+const mapDispatchToProps = { searchUsers, logout }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const style = StyleSheet.create({

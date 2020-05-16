@@ -21,7 +21,8 @@ export default async (getState, { url, method = 'GET', data = null }) => {
     fetchParams.body = JSON.stringify(data)
   }
 
-  return fetch(`https://voilasnap.cf${url}`, fetchParams)
+  //return fetch(`https://voilasnap.cf${url}`, fetchParams)
+  return fetch(`http://localhost:3000${url}`, fetchParams)
     .then(async (response) => {
       if (response.status >= 200 && response.status < 300) {
         return response
