@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import {
   Image,
@@ -10,77 +10,59 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import PropTypes from 'prop-types'
 
 import { login } from '../../reducers/auth'
 
-class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { login: '', password: '' }
-    this.passwordRef = React.createRef()
-  }
+const Login = (props) => {
+  const passwordRef = useRef(null)
+  const [login, setLogin] = useState('')
+  const [password, setPassword] = useState('')
 
-  onChangeLogin = (login) => this.setState({ login })
+  const onSubmit = () => props.login({ login, password })
 
-  onChangePassword = (password) => this.setState({ password })
-
-  onSubmit = () => this.props.login({ login: this.state.login, password: this.state.password })
-
-  render() {
-    const { isError } = this.props
-    return (
-      <KeyboardAvoidingView
-        style={style.backgroundView}
-        behavior="padding"
-        enabled={Platform.OS === 'ios'}>
-        <View style={style.appTitle}>
-          <Image source={require('../../../assets/icon.png')} style={style.logo} />
-          <Text style={style.appTitleText}>VoilaSnap</Text>
-        </View>
-        <View style={style.loginForm}>
-          <TextInput
-            autoCapitalize="none"
-            autoCompleteType="email"
-            blurOnSubmit={false}
-            keyboardType="email-address"
-            onChangeText={this.onChangeLogin}
-            onSubmitEditing={() => this.passwordRef.current.focus()}
-            placeholder="login"
-            returnKeyType="next"
-            style={style.input}
-            textContentType="emailAddress"
-          />
-          <TextInput
-            autoCompleteType="password"
-            onChangeText={this.onChangePassword}
-            onSubmitEditing={this.onSubmit}
-            placeholder="password"
-            ref={this.passwordRef}
-            returnKeyType="done"
-            secureTextEntry={true}
-            style={style.input}
-            textContentType="password"
-          />
-          {isError && <Text style={style.errorMessage}>Wrong password</Text>}
-          <TouchableHighlight
-            onPress={this.onSubmit}
-            style={style.submitButton}
-            underlayColor="firebrick">
-            <Text style={style.submitButtonText}>Sign in</Text>
-          </TouchableHighlight>
-        </View>
-      </KeyboardAvoidingView>
-    )
-  }
+  return (
+    <KeyboardAvoidingView
+      style={style.backgroundView}
+      behavior="padding"
+      enabled={Platform.OS === 'ios'}>
+      <View style={style.appTitle}>
+        <Image source={require('../../../assets/icon.png')} style={style.logo} />
+        <Text style={style.appTitleText}>VoilaSnap</Text>
+      </View>
+      <View style={style.loginForm}>
+        <TextInput
+          autoCapitalize="none"
+          autoCompleteType="email"
+          blurOnSubmit={false}
+          keyboardType="email-address"
+          onChangeText={setLogin}
+          onSubmitEditing={() => passwordRef.current.focus()}
+          placeholder="login"
+          returnKeyType="next"
+          style={style.input}
+          textContentType="emailAddress"
+        />
+        <TextInput
+          autoCompleteType="password"
+          onChangeText={setPassword}
+          onSubmitEditing={onSubmit}
+          placeholder="password"
+          ref={passwordRef}
+          returnKeyType="done"
+          secureTextEntry={true}
+          style={style.input}
+          textContentType="password"
+        />
+        {props.isError && <Text style={style.errorMessage}>{props.error.message}</Text>}
+        <TouchableHighlight onPress={onSubmit} style={style.submitButton} underlayColor="firebrick">
+          <Text style={style.submitButtonText}>Sign in</Text>
+        </TouchableHighlight>
+      </View>
+    </KeyboardAvoidingView>
+  )
 }
 
-Login.propTypes = {
-  login: PropTypes.func.isRequired,
-  isError: PropTypes.bool.isRequired,
-}
-
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
   isError: state.auth.isError,
   error: state.auth.error,
 })

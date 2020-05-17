@@ -51,8 +51,8 @@ const usersReducer = createReducer(initialState, {
       isLoadingMe: false,
     }
   },
-  [fetchMe.rejected](state, { payload }) {
-    return { ...state, me: null, isErrorMe: true, isLoadingMe: false, error: payload }
+  [fetchMe.rejected](state, { error }) {
+    return { ...state, me: null, isErrorMe: true, isLoadingMe: false, error }
   },
   [fetchFriends.pending](state) {
     return { ...state, isErrorFriendsList: false, isLoadingFriendsList: true }
@@ -72,8 +72,8 @@ const usersReducer = createReducer(initialState, {
       friendsList: payload.map((friend) => friend._id),
     }
   },
-  [fetchFriends.rejected](state, { payload }) {
-    return { ...state, isErrorFriendsList: true, isLoadingFriendsList: false, error: payload }
+  [fetchFriends.rejected](state, { error }) {
+    return { ...state, isErrorFriendsList: true, isLoadingFriendsList: false, error }
   },
   [searchUsers.pending](state) {
     return { ...state, isErrorSearch: false, isLoadingSearch: true }
@@ -91,8 +91,8 @@ const usersReducer = createReducer(initialState, {
       searchList: payload.map((user) => user._id),
     }
   },
-  [searchUsers.rejected](state, { payload }) {
-    return { ...state, isErrorSearch: true, isLoadingSearch: false, error: payload }
+  [searchUsers.rejected](state, { error }) {
+    return { ...state, isErrorSearch: true, isLoadingSearch: false, error }
   },
   [setIsUserSearchMode](state) {
     return { ...state, searchList: [] }

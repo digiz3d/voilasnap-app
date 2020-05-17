@@ -37,8 +37,8 @@ const authReducer = createReducer(initialState, {
   [login.fulfilled](state, { payload }) {
     return { ...state, isLoading: false, isError: false, jwt: payload, error: null }
   },
-  [login.rejected](state, { payload }) {
-    return { ...state, isLoading: false, isError: true, jwt: null, error: payload }
+  [login.rejected](state, { error }) {
+    return { ...state, isLoading: false, isError: true, jwt: null, error }
   },
   [loginReady](state) {
     return { ...state, isReady: true }

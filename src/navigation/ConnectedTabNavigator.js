@@ -20,7 +20,7 @@ const CameraIcon = ({ color }) => <MaterialCommunityIcons name="camera" color={c
 
 const AccountIcon = ({ color }) => <MaterialCommunityIcons name="account" color={color} size={20} />
 
-const SafeAreaMaterialTopTabBar = ({ children, ...props }) => (
+const SafeAreaMaterialTopTabBar = (props) => (
   <SafeAreaView style={{ backgroundColor: '#ffffff' }}>
     <MaterialTopTabBar {...props} style={{ shadowOpacity: 0 }} />
   </SafeAreaView>
