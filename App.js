@@ -12,9 +12,7 @@ function App() {
   useEffect(() => {
     try {
       SplashScreen.preventAutoHide()
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) {}
     if (isReady) SplashScreen.hide()
   }, [isReady])
 

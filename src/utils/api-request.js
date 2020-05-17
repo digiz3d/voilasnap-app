@@ -1,28 +1,24 @@
+import axios from 'axios'
+
+import { version } from '../../package.json'
+
+const apiRequest = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://voilasnap.cf',
+  timeout: 5000,
+})
+
 export default async (getState, { url, method = 'GET', data = null }) => {
   const state = getState()
 
-  const fetchParams = {
-    method,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  }
+  const headers = {}
 
   if (state.auth.jwt) {
-    fetchParams.headers.Authorization = `Bearer ${state.auth.jwt}`
+    headers.Authorization = `Bearer ${state.auth.jwt}`
   }
 
-  if (data) {
-    fetchParams.body = JSON.stringify(data)
-  }
+  headers['Client-Version'] = version
 
-  return fetch(`https://voilasnap.cf${url}`, fetchParams)
-    .then(async (response) => {
-      if (response.status >= 200 && response.status < 300) {
-        return response
-      }
-      throw await response.json()
-    })
-    .then((response) => response.json())
+  const { data: responseData } = await apiRequest({ url, headers, method, data })
+  return responseData
 }

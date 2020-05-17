@@ -7,7 +7,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect } from 'react'
 
-import { getMe } from '../reducers/users'
+import { fetchMe, fetchFriends } from '../reducers/users'
 import Camera from '../screens/Camera'
 import Chat from '../screens/Chat'
 import Profile from '../screens/Profile'
@@ -26,9 +26,10 @@ const SafeAreaMaterialTopTabBar = ({ children, ...props }) => (
   </SafeAreaView>
 )
 
-const ConnectedTabNavigator = ({ getMe }) => {
+const ConnectedTabNavigator = ({ fetchMe, fetchFriends }) => {
   useEffect(() => {
-    getMe()
+    fetchMe()
+    fetchFriends()
   }, [])
 
   return (
@@ -70,6 +71,6 @@ const ConnectedTabNavigator = ({ getMe }) => {
     </Tab.Navigator>
   )
 }
-const mapDispatchToProps = { getMe }
+const mapDispatchToProps = { fetchMe, fetchFriends }
 
 export default connect(null, mapDispatchToProps)(ConnectedTabNavigator)
