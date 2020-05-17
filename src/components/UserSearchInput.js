@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { TextInput, StyleSheet, View } from 'react-native'
+import { StyleSheet, TextInput, View } from 'react-native'
 
 function debounce(func) {
   let timeout

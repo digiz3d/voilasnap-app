@@ -1,5 +1,4 @@
-import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
-import apiRequest from '../utils/api-request'
+import { createAction, createReducer } from '@reduxjs/toolkit'
 
 const initialState = {
   isUserSearchMode: false,

@@ -1,4 +1,3 @@
-import { connect } from 'react-redux'
 import {
   LayoutAnimation,
   Platform,
@@ -9,13 +8,15 @@ import {
   UIManager,
   View,
 } from 'react-native'
-import Constants from 'expo-constants'
 import React, { useEffect, useRef, useState } from 'react'
+import Constants from 'expo-constants'
+import { connect } from 'react-redux'
 
 import { logout } from '../../reducers/auth'
-import { setIsUserSearchMode, selectIsUserSearchMode } from '../../reducers/ui'
 import { selectMe } from '../../reducers/users'
+import { selectIsUserSearchMode, setIsUserSearchMode } from '../../reducers/ui'
 import { version } from '../../../package.json'
+
 import FriendsList from './containers/FriendsList'
 import UserSearchInput from './containers/UserSearchInput'
 import UserSearchResults from './containers/UserSearchResults'

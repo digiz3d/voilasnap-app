@@ -1,4 +1,5 @@
 import { createAsyncThunk, createReducer, createSelector } from '@reduxjs/toolkit'
+
 import apiRequest from '../utils/api-request'
 
 import { setIsUserSearchMode } from './ui'

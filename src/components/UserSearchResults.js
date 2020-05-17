@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ScrollView, Text } from 'react-native'
+import { ScrollView, StyleSheet, Text } from 'react-native'
 
 import UserSearchResult from './UserSearchResult'
 

@@ -7,7 +7,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect } from 'react'
 
-import { fetchMe, fetchFriends } from '../reducers/users'
+import { fetchFriends, fetchMe } from '../reducers/users'
 import Camera from '../screens/Camera'
 import Chat from '../screens/Chat'
 import Profile from '../screens/Profile'

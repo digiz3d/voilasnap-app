@@ -1,9 +1,27 @@
 {
   "env": { "browser": true, "node": true },
   "parser": "babel-eslint",
-  "plugins": ["react"],
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": ["react", "import"],
   "parserOptions": { "ecmaVersion": 2020, "sourceType": "module", "ecmaFeatures": { "jsx": true } },
   "settings": { "react": { "version": "detect" } },
-  "rules": { "prefer-template": "error", "object-shorthand": "error", "react/prop-types": "off" }
+  "rules": {
+    "prefer-template": "error",
+    "object-shorthand": "error",
+    "react/prop-types": "off",
+    "sort-imports": ["error", { "ignoreCase": true, "ignoreDeclarationSort": true }],
+    "import/order": [
+      "error",
+      {
+        "groups": [["builtin"], ["external"], ["parent"], ["sibling", "index"]],
+        "newlines-between": "always"
+      }
+    ],
+    "no-extra-semi": "off"
+  }
 }
