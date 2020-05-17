@@ -2,23 +2,15 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 
-const UserSearchResult = ({
-  isFirst,
-  isFriend,
-  isReceivedRequest,
-  isSentRequest,
-  onAdd,
-  onRemove,
-  user,
-}) => {
+const UserSearchResult = ({ isFirst, onAdd, onRemove, user }) => {
   let actions
-  if (isFriend)
+  if (user.isFriend)
     actions = (
       <TouchableHighlight onPress={onRemove}>
         <Text style={style.actionButtonText}>Remove</Text>
       </TouchableHighlight>
     )
-  else if (isReceivedRequest)
+  else if (user.isReceived)
     actions = actions = (
       <>
         <TouchableHighlight onPress={onAdd}>
@@ -29,7 +21,7 @@ const UserSearchResult = ({
         </TouchableHighlight>
       </>
     )
-  else if (isSentRequest)
+  else if (user.isSent)
     actions = (
       <TouchableHighlight onPress={onRemove}>
         <Text style={style.actionButtonText}>Cancel</Text>

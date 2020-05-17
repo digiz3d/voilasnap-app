@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { loginUsingLocalstorage } from '../reducers/auth'
 
-const AuthLoading = ({ loginUsingLocalstorage, setIsReady, isLoginReady }) => {
+const AuthLoading = ({ isLoginReady, loginUsingLocalstorage, setIsReady }) => {
   useEffect(() => {
     loginUsingLocalstorage()
   }, [])

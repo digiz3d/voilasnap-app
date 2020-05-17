@@ -26,7 +26,7 @@ const SafeAreaMaterialTopTabBar = (props) => (
   </SafeAreaView>
 )
 
-const ConnectedTabNavigator = ({ fetchMe, fetchFriends }) => {
+const ConnectedTabNavigator = ({ fetchFriends, fetchMe }) => {
   useEffect(() => {
     fetchMe()
     fetchFriends()
