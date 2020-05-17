@@ -22,7 +22,7 @@ export const login = createAsyncThunk('auth/login', async ({ login, password }, 
   return token
 })
 
-export const loginUsingLocalstorage = () => async (dispatch, getState) => {
+export const loginUsingLocalstorage = () => async (dispatch) => {
   const localJwt = await AsyncStorage.getItem('jwt')
   if (localJwt) {
     dispatch(login.fulfilled(localJwt))

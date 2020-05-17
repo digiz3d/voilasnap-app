@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   Image,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -29,7 +30,10 @@ class Login extends Component {
   render() {
     const { isError } = this.props
     return (
-      <KeyboardAvoidingView style={style.backgroundView} behavior="height" enabled>
+      <KeyboardAvoidingView
+        style={style.backgroundView}
+        behavior="padding"
+        enabled={Platform.OS === 'ios'}>
         <View style={style.appTitle}>
           <Image source={require('../../../assets/icon.png')} style={style.logo} />
           <Text style={style.appTitleText}>VoilaSnap</Text>
