@@ -14,30 +14,19 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { logout } from '../../reducers/auth'
 import { setIsUserSearchMode, selectIsUserSearchMode } from '../../reducers/ui'
-import { searchUsers, selectMe } from '../../reducers/users'
+import { selectMe } from '../../reducers/users'
 import { version } from '../../../package.json'
 import FriendsList from './containers/FriendsList'
-import UserSearchInput from '../../components/UserSearchInput'
+import UserSearchInput from './containers/UserSearchInput'
 import UserSearchResults from './containers/UserSearchResults'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
-function debounce(func) {
-  let timeout
-  return function (...args) {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      func.apply(this, args)
-    }, 300)
-  }
-}
-
-function Profile({ isLoadingMe, isUserSearchMode, logout, me, searchUsers, setIsUserSearchMode }) {
+function Profile({ isLoadingMe, isUserSearchMode, logout, me, setIsUserSearchMode }) {
   const [logoutConfirm, setLogoutConfirm] = useState(false)
   const cancelLogoutTimer = useRef(null)
-  const delayedSearch = useRef(debounce(searchUsers)).current
 
   useEffect(() => {
     return () => {
@@ -80,7 +69,7 @@ function Profile({ isLoadingMe, isUserSearchMode, logout, me, searchUsers, setIs
               <Text style={style.accountLogoutButtonText}>Back</Text>
             </TouchableHighlight>
           </View>
-          <UserSearchInput onChangeText={(text) => delayedSearch(text)} />
+          <UserSearchInput />
         </View>
         <UserSearchResults />
         <View style={style.version}>
@@ -128,7 +117,7 @@ const mapStateToProps = (state) => ({
   isUserSearchMode: selectIsUserSearchMode(state),
   me: selectMe(state),
 })
-const mapDispatchToProps = { logout, searchUsers, setIsUserSearchMode }
+const mapDispatchToProps = { logout, setIsUserSearchMode }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const style = StyleSheet.create({
