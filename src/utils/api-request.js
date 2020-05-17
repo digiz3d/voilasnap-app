@@ -8,7 +8,7 @@ const apiRequest = axios.create({
   timeout: 5000,
 })
 
-export default async (getState, { url, method = 'GET', data = null }) => {
+export default async (getState, { data = null, method = 'GET', url }) => {
   const state = getState()
 
   const headers = {}
@@ -19,6 +19,6 @@ export default async (getState, { url, method = 'GET', data = null }) => {
 
   headers['Client-Version'] = version
 
-  const { data: responseData } = await apiRequest({ url, headers, method, data })
+  const { data: responseData } = await apiRequest({ data, headers, method, url })
   return responseData
 }

@@ -3,15 +3,33 @@ import { ScrollView, StyleSheet, Text } from 'react-native'
 
 import UserSearchResult from './UserSearchResult'
 
-const UserSearchResults = ({ users, isLoading, isError }) => {
+const UserSearchResults = ({
+  addFriend,
+  friendIds,
+  isError,
+  isLoading,
+  receivedRequestIds,
+  removeFriend,
+  sentRequestIds,
+  users,
+}) => {
   if (isLoading) return <Text style={style.pad}>Loading usersearch</Text>
   if (isError) return <Text style={style.pad}>Error usersearch</Text>
   if (!users.length) return <Text style={style.pad}>No result</Text>
 
   return (
     <ScrollView style={style.container}>
-      {users.map((user) => (
-        <UserSearchResult key={user._id} user={user} />
+      {users.map((user, i) => (
+        <UserSearchResult
+          isFriend={friendIds.includes(user._id)}
+          isLast={i === users.length - 1}
+          isReceivedRequest={receivedRequestIds.includes(user._id)}
+          isSentRequest={sentRequestIds.includes(user._id)}
+          key={user._id}
+          onAdd={() => addFriend(user._id)}
+          onRemove={() => removeFriend(user._id)}
+          user={user}
+        />
       ))}
     </ScrollView>
   )

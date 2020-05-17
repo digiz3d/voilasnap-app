@@ -1,5 +1,5 @@
 {
-  "env": { "browser": true, "node": true },
+  "env": { "browser": true, "es6": true, "node": true },
   "parser": "babel-eslint",
   "extends": [
     "eslint:recommended",
@@ -7,7 +7,7 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
-  "plugins": ["react", "import"],
+  "plugins": ["react", "import", "sort-destructure-keys"],
   "parserOptions": { "ecmaVersion": 2020, "sourceType": "module", "ecmaFeatures": { "jsx": true } },
   "settings": { "react": { "version": "detect" } },
   "rules": {
@@ -22,6 +22,7 @@
         "newlines-between": "always"
       }
     ],
-    "no-extra-semi": "off"
+    "no-extra-semi": "off",
+    "sort-destructure-keys/sort-destructure-keys": 2
   }
 }

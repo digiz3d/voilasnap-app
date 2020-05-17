@@ -15,9 +15,9 @@ const initialState = {
   isLoadingMe: true,
   isLoadingSearch: false,
   me: null,
-  receivedList: [],
+  requestReceivedList: [],
+  requestSentList: [],
   searchList: [],
-  sentList: [],
 }
 
 export const fetchMe = createAsyncThunk('users/get-me', async (_, { getState }) =>
@@ -25,18 +25,28 @@ export const fetchMe = createAsyncThunk('users/get-me', async (_, { getState }) 
 )
 
 export const fetchFriends = createAsyncThunk('friends/get-friends', async (_, { getState }) => {
-  const res = await apiRequest(getState, { url: '/friends' })
-  return res.friends
+  const { friends, received, sent } = await apiRequest(getState, { url: '/friends' })
+  return { friends, received, sent }
 })
 
 export const searchUsers = createAsyncThunk('users/search', async (username, { getState }) => {
   if (username.length < 3) return []
-  const res = await apiRequest(getState, {
+  const { users } = await apiRequest(getState, {
     url: '/users/search',
     method: 'POST',
     data: { username },
   })
-  return res.payload
+  return users
+})
+
+export const addFriend = createAsyncThunk('friends/ask', async (id, { getState }) => {
+  await apiRequest(getState, { url: `/friends/${id}`, method: 'POST' })
+  return id
+})
+
+export const removeFriend = createAsyncThunk('friends/remove', async (id, { getState }) => {
+  await apiRequest(getState, { url: `/friends/${id}`, method: 'DELETE' })
+  return id
 })
 
 const usersReducer = createReducer(initialState, {
@@ -58,10 +68,12 @@ const usersReducer = createReducer(initialState, {
   [fetchFriends.pending](state) {
     return { ...state, isErrorFriendsList: false, isLoadingFriendsList: true }
   },
-  [fetchFriends.fulfilled](state, { payload }) {
+  [fetchFriends.fulfilled](state, { payload: { friends, received, sent } }) {
     const newUsersById = {}
 
-    payload.forEach((friend) => {
+    const users = [...friends, ...received, ...sent]
+
+    users.forEach((friend) => {
       newUsersById[friend._id] = friend
     })
 
@@ -70,7 +82,9 @@ const usersReducer = createReducer(initialState, {
       byId: { ...state.byId, ...newUsersById },
       isErrorFriendsList: false,
       isLoadingFriendsList: false,
-      friendsList: payload.map((friend) => friend._id),
+      friendsList: friends.map((friend) => friend._id),
+      requestReceivedList: received.map((friend) => friend._id),
+      requestSentList: sent.map((friend) => friend._id),
     }
   },
   [fetchFriends.rejected](state, { error }) {
@@ -86,7 +100,7 @@ const usersReducer = createReducer(initialState, {
     })
     return {
       ...state,
-      byId: { ...state.byId, ...newUsersById },
+      byId: { ...newUsersById, ...state.byId },
       isErrorSearch: false,
       isLoadingSearch: false,
       searchList: payload.map((user) => user._id),
@@ -98,12 +112,37 @@ const usersReducer = createReducer(initialState, {
   [setIsUserSearchMode](state) {
     return { ...state, searchList: [] }
   },
+  [addFriend.fulfilled](state, { payload }) {
+    const isReceived = state.requestReceivedList.includes(payload)
+    const isFriend = state.friendsList.includes(payload)
+
+    const newState = {}
+
+    if (isReceived) {
+      newState.requestReceivedList = state.requestReceivedList.filter((id) => id !== payload)
+      newState.friendsList = [...new Set([...state.friendsList, payload])]
+    } else if (!isFriend) {
+      newState.requestSentList = [...new Set([...state.requestSentList, payload])]
+    }
+
+    return { ...state, ...newState }
+  },
+  [removeFriend.fulfilled](state, { payload }) {
+    return {
+      ...state,
+      friendsList: state.friendsList.filter((id) => id !== payload),
+      requestReceivedList: state.requestReceivedList.filter((id) => id !== payload),
+      requestSentList: state.requestSentList.filter((id) => id !== payload),
+    }
+  },
 })
 
-export const selectMyId = (state) => state.users.me
-export const selectUsersById = (state) => state.users.byId
 export const selectMyFriendsIds = (state) => state.users.friendsList
+export const selectMyId = (state) => state.users.me
+export const selectRequestReceivedIds = (state) => state.users.requestReceivedList
+export const selectRequestSentIds = (state) => state.users.requestSentList
 export const selectSearchUserIds = (state) => state.users.searchList
+export const selectUsersById = (state) => state.users.byId
 
 export const selectMe = createSelector([selectMyId, selectUsersById], (myId, usersById) => {
   if (myId && usersById[myId]) return usersById[myId]

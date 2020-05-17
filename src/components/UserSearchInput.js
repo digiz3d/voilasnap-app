@@ -21,6 +21,7 @@ const UserSearchInput = ({ onChangeText }) => {
         placeholder="username"
         autoFocus
         onChangeText={delayedOnChangeText}
+        autoCapitalize="none"
       />
     </View>
   )
