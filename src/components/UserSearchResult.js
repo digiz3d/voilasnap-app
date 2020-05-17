@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 
 const UserSearchResult = ({
+  isFirst,
   isFriend,
-  isLast,
   isReceivedRequest,
   isSentRequest,
   onAdd,
@@ -43,7 +43,7 @@ const UserSearchResult = ({
     )
 
   return (
-    <View style={[style.container, isLast && style.containerLast]}>
+    <View style={[style.container, isFirst && style.containerFirst]}>
       <Text style={style.username}>{user.username}</Text>
       <View style={style.actions}>{actions}</View>
     </View>
@@ -54,12 +54,12 @@ export default UserSearchResult
 
 const style = StyleSheet.create({
   container: {
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  containerLast: {
-    borderBottomWidth: 1,
+  containerFirst: {
+    borderTopWidth: 1,
   },
   actions: { flexDirection: 'row' },
   username: {

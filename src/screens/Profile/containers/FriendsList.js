@@ -1,13 +1,13 @@
 import { connect } from 'react-redux'
 
-import UserSearchResults from '../../../components/FriendsList'
-import { selectMyFriends } from '../../../reducers/users'
+import FriendsList from '../../../components/FriendsList'
+import { fetchFriends, selectMyFriends } from '../../../reducers/users'
 
 const mapStateToProps = (state) => ({
-  isError: state.users.isErrorFriends,
-  isLoading: state.users.isLoadingFriends,
+  isError: state.users.isErrorFriendsList,
+  isLoading: state.users.isLoadingFriendsList,
   friends: selectMyFriends(state),
 })
-const mapDispatchToProps = {}
+const mapDispatchToProps = { fetchFriends }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSearchResults)
+export default connect(mapStateToProps, mapDispatchToProps)(FriendsList)

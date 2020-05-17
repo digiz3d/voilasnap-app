@@ -21,8 +21,8 @@ const UserSearchResults = ({
     <ScrollView style={style.container}>
       {users.map((user, i) => (
         <UserSearchResult
+          isFirst={i === 0}
           isFriend={friendIds.includes(user._id)}
-          isLast={i === users.length - 1}
           isReceivedRequest={receivedRequestIds.includes(user._id)}
           isSentRequest={sentRequestIds.includes(user._id)}
           key={user._id}
