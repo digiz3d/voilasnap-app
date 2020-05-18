@@ -1,6 +1,7 @@
 import { createAsyncThunk, createReducer, createSelector } from '@reduxjs/toolkit'
 
 import apiRequest from '../utils/api-request'
+import { uniqAdd } from '../utils/uniq'
 
 import { setIsUserSearchMode } from './ui'
 
@@ -22,27 +23,25 @@ export const fetchMe = createAsyncThunk('users/get-me', async (_, { getState }) 
   apiRequest(getState, { url: '/auth/me' }),
 )
 
-export const fetchFriends = createAsyncThunk('friends/get-friends', async (_, { getState }) => {
-  const { users } = await apiRequest(getState, { url: '/friends' })
-  return users
-})
+export const fetchFriends = createAsyncThunk('users/get-friends', async (_, { getState }) =>
+  apiRequest(getState, { url: '/friends' }),
+)
 
 export const searchUsers = createAsyncThunk('users/search', async (username, { getState }) => {
-  if (username.length < 3) return []
-  const { users } = await apiRequest(getState, {
+  if (username.length < 3) return { users: [] }
+  return apiRequest(getState, {
     url: '/users/search',
     method: 'POST',
     data: { username },
   })
-  return users
 })
 
-export const addFriend = createAsyncThunk('friends/ask', async (id, { getState }) => {
+export const addFriend = createAsyncThunk('users/add-friend', async (id, { getState }) => {
   await apiRequest(getState, { url: `/friends/${id}`, method: 'POST' })
   return id
 })
 
-export const removeFriend = createAsyncThunk('friends/remove', async (id, { getState }) => {
+export const removeFriend = createAsyncThunk('users/remove-friend', async (id, { getState }) => {
   await apiRequest(getState, { url: `/friends/${id}`, method: 'DELETE' })
   return id
 })
@@ -54,6 +53,7 @@ const usersReducer = createReducer(initialState, {
   [fetchMe.fulfilled](state, { payload }) {
     return {
       ...state,
+      allIds: uniqAdd(state.allIds, payload._id),
       byId: { ...state.byId, [payload._id]: payload },
       me: payload._id,
       isErrorMe: false,
@@ -66,16 +66,19 @@ const usersReducer = createReducer(initialState, {
   [fetchFriends.pending](state) {
     return { ...state, isErrorFriendsList: false, isLoadingFriendsList: true }
   },
-  [fetchFriends.fulfilled](state, { payload }) {
+  [fetchFriends.fulfilled](state, { payload: { users } }) {
     const newUsersById = {}
 
-    payload.forEach((friend) => {
+    users.forEach((friend) => {
       newUsersById[friend._id] = friend
     })
 
     return {
       ...state,
-      allIds: payload.map(({ _id }) => _id),
+      allIds: uniqAdd(
+        state.allIds,
+        users.map(({ _id }) => _id),
+      ),
       byId: { ...state.byId, ...newUsersById },
       isErrorFriendsList: false,
       isLoadingFriendsList: false,
@@ -87,17 +90,21 @@ const usersReducer = createReducer(initialState, {
   [searchUsers.pending](state) {
     return { ...state, isErrorSearch: false, isLoadingSearch: true }
   },
-  [searchUsers.fulfilled](state, { payload }) {
+  [searchUsers.fulfilled](state, { payload: { users } }) {
     const newUsersById = {}
-    payload.forEach((user) => {
+    users.forEach((user) => {
       newUsersById[user._id] = user
     })
     return {
       ...state,
+      allIds: uniqAdd(
+        state.allIds,
+        users.map((user) => user._id),
+      ),
       byId: { ...state.byId, ...newUsersById },
       isErrorSearch: false,
       isLoadingSearch: false,
-      searchList: payload.map((user) => user._id),
+      searchList: users.map((user) => user._id),
     }
   },
   [searchUsers.rejected](state, { error }) {
