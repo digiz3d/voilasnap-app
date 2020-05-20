@@ -2,13 +2,12 @@ import axios from 'axios'
 
 import { version } from '../../package.json'
 
-const apiRequest = axios.create({
-  baseURL:
-    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://voilasnap.cf',
+const axiosConf = axios.create({
+  baseURL: 'https://voilasnap.cf',
   timeout: 5000,
 })
 
-export default async (getState, { data = null, method = 'GET', url }) => {
+const apiRequest = async (getState, { data = null, method = 'GET', url }) => {
   const state = getState()
 
   const headers = {}
@@ -19,6 +18,8 @@ export default async (getState, { data = null, method = 'GET', url }) => {
 
   headers['Client-Version'] = version
 
-  const { data: responseData } = await apiRequest({ data, headers, method, url })
+  const { data: responseData } = await axiosConf({ data, headers, method, url })
   return responseData
 }
+
+export default apiRequest
