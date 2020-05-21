@@ -8,8 +8,8 @@ const FriendsList = ({ fetchFriends, friends, isLoading }) => {
     <ScrollView
       style={style.scrollView}
       refreshControl={<RefreshControl onRefresh={fetchFriends} refreshing={isLoading} />}>
-      {friends.map((user, i) => (
-        <UserListItem key={user._id} user={user} isFirst={i === 0} />
+      {friends.map((friend, i) => (
+        <UserListItem key={friend._id} user={friend} isFirst={i === 0} />
       ))}
       {!friends.length && <Text style={style.nothing}>No friend yet ! Add some !</Text>}
     </ScrollView>
