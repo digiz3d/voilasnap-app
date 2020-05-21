@@ -38,10 +38,19 @@ const Cam = ({ sendSnap, setCurrentSnapData }) => {
   }
 
   const takePicture = async () => {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ base64: true, exif: 1, quality: 1 })
-      setCurrentSnapData(photo.base64)
-      sendSnap()
+    try {
+      if (cameraRef.current) {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.5,
+          base64: true,
+          exif: false,
+          onPictureSaved: undefined,
+        })
+        setCurrentSnapData(photo.base64)
+        sendSnap()
+      }
+    } catch (e) {
+      console.warn(e)
     }
   }
 
@@ -71,6 +80,7 @@ const Cam = ({ sendSnap, setCurrentSnapData }) => {
             type={cameraSide}
             ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
             ref={cameraRef}
+            onCameraReady={() => console.log('camera ready !')}
           />
           <View style={style.bottom}>
             <View style={style.bottomAction}>

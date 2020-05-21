@@ -22,6 +22,7 @@ export const sendSnap = createAsyncThunk('messages/send-snap', (receiverId, { ge
     url: `/users/${firstFriend._id}/message`,
     method: 'POST',
     data: { image },
+    timeout: 200000,
   })
 })
 
