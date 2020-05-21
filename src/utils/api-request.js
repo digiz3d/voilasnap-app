@@ -18,8 +18,8 @@ const apiRequest = async (getState, { data = null, method = 'GET', timeout = nul
   }
 
   headers['Client-Version'] = version
-
-  const queryConf = { data, headers, method, url }
+  const queryConf = { headers, method, url }
+  if (data) queryConf.data = data
   if (timeout) queryConf.timeout = timeout
   const { data: responseData } = await axiosConf(queryConf)
   return responseData
