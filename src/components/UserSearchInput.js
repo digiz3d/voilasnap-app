@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
-import { Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native'
 
 function debounce(func) {
   let timeout
