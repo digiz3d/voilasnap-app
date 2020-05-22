@@ -4,12 +4,12 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { sendSnap, setCurrentSnapData } from '../reducers/messages'
+import { prepareSnap, setCurrentSnapData } from '../reducers/messages'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
 
-const Cam = ({ sendSnap, setCurrentSnapData }) => {
+const Cam = ({ prepareSnap, setCurrentSnapData }) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
@@ -47,7 +47,7 @@ const Cam = ({ sendSnap, setCurrentSnapData }) => {
           onPictureSaved: undefined,
         })
         setCurrentSnapData(photo.base64)
-        sendSnap()
+        prepareSnap()
       }
     } catch (e) {
       console.warn(e)
@@ -102,7 +102,7 @@ const Cam = ({ sendSnap, setCurrentSnapData }) => {
 }
 
 const mapStateToProps = null
-const mapDispatchToProps = { sendSnap, setCurrentSnapData }
+const mapDispatchToProps = { prepareSnap, setCurrentSnapData }
 export default connect(mapStateToProps, mapDispatchToProps)(Cam)
 
 const style = StyleSheet.create({
