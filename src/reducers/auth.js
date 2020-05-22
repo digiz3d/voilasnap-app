@@ -3,6 +3,8 @@ import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 
 import apiRequest from '../utils/api-request'
 
+import { fetchMe } from './users'
+
 const initialState = {
   error: null,
   isError: false,
@@ -32,6 +34,9 @@ export const loginUsingLocalstorage = () => async (dispatch) => {
 }
 
 const authReducer = createReducer(initialState, {
+  [fetchMe.rejected](state) {
+    return { ...state, jwt: null }
+  },
   [login.pending](state) {
     return { ...state, isLoading: true, isError: false, error: null }
   },
