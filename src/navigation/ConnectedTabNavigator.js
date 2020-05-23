@@ -35,7 +35,7 @@ const ConnectedTabNavigator = ({ fetchFriends, fetchMe }) => {
   return (
     <Tab.Navigator
       keyboardDismissMode="on-drag"
-      initialRouteName="Chat"
+      initialRouteName="Camera"
       tabBar={SafeAreaMaterialTopTabBar}
       tabBarPosition="bottom"
       tabBarOptions={{
