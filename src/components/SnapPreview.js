@@ -28,7 +28,7 @@ function runTiming(value, dest) {
   }
 
   const config = {
-    duration: 1000,
+    duration: 200,
     toValue: new Value(0),
     easing: Easing.inOut(Easing.ease),
   }
@@ -61,15 +61,16 @@ function runTiming(value, dest) {
 
 const SnapPreview = () => {
   const [clicked, setClicked] = useState(false)
-  let transition = new Value(clicked ? 0 : 1)
+  const transition = useRef(new Value(0)).current
 
-  useCode(set(transition, runTiming(transition, clicked ? 1 : 0)), [clicked])
+  useCode(() => set(transition, runTiming(transition, clicked ? 1 : 0)), [clicked])
 
   const translateX = interpolate(transition, {
     inputRange: [0, 1],
     outputRange: [0, 50],
     extrapolate: Extrapolate.CLAMP,
   })
+
   const translateY = interpolate(transition, {
     inputRange: [0, 1],
     outputRange: [0, 50],

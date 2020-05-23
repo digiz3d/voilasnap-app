@@ -4,8 +4,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { prepareSnap, setCurrentSnap } from '../reducers/messages'
-import SnapPreview from '../components/SnapPreview'
+import { prepareSnap, setCurrentSnap } from '../../reducers/messages'
+import SnapPreview from '../../components/SnapPreview'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
