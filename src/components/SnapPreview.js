@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { Image, StyleSheet, Text, View, Dimensions } from 'react-native'
+import React, { useRef } from 'react'
+import { Image, StyleSheet, Text } from 'react-native'
 import Animated, {
   block,
   Clock,
@@ -7,14 +7,14 @@ import Animated, {
   cond,
   debug,
   Easing,
+  Extrapolate,
+  interpolate,
   set,
   startClock,
   stopClock,
   timing,
   useCode,
   Value,
-  interpolate,
-  Extrapolate,
 } from 'react-native-reanimated'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
