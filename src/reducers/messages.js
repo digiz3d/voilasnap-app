@@ -3,7 +3,7 @@ import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 import { uniqAdd } from '../utils/uniq'
 import apiRequest from '../utils/api-request'
 
-import { selectFirstFriend, selectMyId } from './users'
+import { selectMyId } from './users'
 
 const initialState = {
   allIds: [],
@@ -11,21 +11,22 @@ const initialState = {
   currentSnap: null,
 }
 
+export const cancelSnap = createAction('messages/cancel-snap')
 export const setCurrentSnap = createAction('messages/set-sending-snap-data')
 
-export const prepareSnap = createAsyncThunk(
+export const sendSnap = createAsyncThunk(
   'messages/prepare-sending-snap',
   (receiverId, { dispatch, getState, requestId }) => {
     const state = getState()
-    const newSnap = {
+    const preparedSnap = {
       _id: requestId,
       content: selectCurrentSnap(state).base64,
       kind: 'Snap',
-      receiverId: selectFirstFriend(state)._id,
+      receiverId,
       senderId: selectMyId(state),
       sentAt: Date.now(),
     }
-    dispatch(sendPreparedSnap(newSnap))
+    dispatch(sendPreparedSnap(preparedSnap))
   },
 )
 
@@ -39,8 +40,11 @@ export const sendPreparedSnap = createAsyncThunk('messages/send-snap', (snap, { 
 )
 
 const messagesReducer = createReducer(initialState, {
-  [setCurrentSnap](state, { payload }) {
-    return { ...state, currentSnap: payload }
+  [cancelSnap](state) {
+    return {
+      ...state,
+      currentSnap: null,
+    }
   },
   [sendPreparedSnap.pending](state, { meta: { arg: preparedSnap } }) {
     return {
@@ -77,6 +81,18 @@ const messagesReducer = createReducer(initialState, {
           error,
         },
       },
+    }
+  },
+  [sendSnap.fulfilled](state, { payload }) {
+    return {
+      ...state,
+      currentSnap: payload,
+    }
+  },
+  [setCurrentSnap](state, { payload }) {
+    return {
+      ...state,
+      currentSnap: payload,
     }
   },
 })

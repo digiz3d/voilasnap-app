@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View, Dimensions } from 'react-native'
 import Animated, {
   block,
   Clock,
@@ -18,7 +18,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
-function runTiming(value, dest) {
+function runTransition(value, dest) {
   const clock = new Clock()
   const state = {
     finished: new Value(0),
@@ -28,7 +28,7 @@ function runTiming(value, dest) {
   }
 
   const config = {
-    duration: 200,
+    duration: 500,
     toValue: new Value(0),
     easing: Easing.inOut(Easing.ease),
   }
@@ -59,33 +59,45 @@ function runTiming(value, dest) {
   ])
 }
 
-const SnapPreview = () => {
-  const [clicked, setClicked] = useState(false)
+const SnapPreview = ({ onCancel, onSend, snap }) => {
   const transition = useRef(new Value(0)).current
-
-  useCode(() => set(transition, runTiming(transition, clicked ? 1 : 0)), [clicked])
-
-  const translateX = interpolate(transition, {
+  const opacity = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [0, 50],
+    outputRange: [0.5, 1],
     extrapolate: Extrapolate.CLAMP,
   })
 
   const translateY = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [0, 50],
+    outputRange: [0, 200],
     extrapolate: Extrapolate.CLAMP,
   })
 
+  useCode(() => set(transition, runTransition(transition, snap !== null ? 1 : 0)), [snap])
+
+  if (!snap) return null
+
   return (
-    <View style={style.bg}>
-      <TouchableWithoutFeedback onPress={() => setClicked(!clicked)}>
-        <Text style={style.txt}>Prems</Text>
-      </TouchableWithoutFeedback>
-      <Animated.View style={{ transform: [{ translateX, translateY }] }}>
-        <Text style={style.txt}>Oui</Text>
+    <Animated.View style={[style.bg, { opacity }]}>
+      <Image
+        source={{ uri: snap.uri }}
+        width={snap.width}
+        height={snap.height}
+        fadeDuration={0}
+        resizeMode="cover"
+        style={style.img}
+      />
+      <Animated.View style={{ transform: [{ translateY }] }}>
+        <TouchableWithoutFeedback
+          style={style.txt}
+          onPress={() => onSend('5eb5c305070721001b4a3e3f')}>
+          <Text>Send the snap</Text>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback style={style.txt} onPress={() => onCancel()}>
+          <Text>Cancel</Text>
+        </TouchableWithoutFeedback>
       </Animated.View>
-    </View>
+    </Animated.View>
   )
 }
 
@@ -94,9 +106,9 @@ export default SnapPreview
 const style = StyleSheet.create({
   bg: {
     ...StyleSheet.absoluteFill,
-    padding: 40,
-    backgroundColor: 'red',
+    backgroundColor: 'orange',
   },
+  img: { ...StyleSheet.absoluteFill },
   txt: { color: 'green', margin: 30, padding: 30, backgroundColor: 'yellow' },
   btn: { color: 'green', margin: 30, padding: 30, backgroundColor: 'yellow' },
 })

@@ -4,13 +4,13 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { prepareSnap, setCurrentSnap } from '../../reducers/messages'
+import { cancelSnap, selectCurrentSnap, sendSnap, setCurrentSnap } from '../../reducers/messages'
 import SnapPreview from '../../components/SnapPreview'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
 
-const Cam = ({ prepareSnap, setCurrentSnap }) => {
+const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
@@ -48,7 +48,6 @@ const Cam = ({ prepareSnap, setCurrentSnap }) => {
           onPictureSaved: undefined,
         })
         setCurrentSnap(photo)
-        prepareSnap()
       }
     } catch (e) {
       console.warn(e)
@@ -96,15 +95,18 @@ const Cam = ({ prepareSnap, setCurrentSnap }) => {
             </View>
             <View style={style.bottomAction}></View>
           </View>
-          <SnapPreview />
+          <SnapPreview snap={currentSnap} onSend={sendSnap} onCancel={cancelSnap} />
         </>
       )}
     </View>
   )
 }
 
-const mapStateToProps = null
-const mapDispatchToProps = { prepareSnap, setCurrentSnap }
+const mapStateToProps = (state) => ({
+  currentSnap: selectCurrentSnap(state),
+})
+
+const mapDispatchToProps = { cancelSnap, sendSnap, setCurrentSnap }
 export default connect(mapStateToProps, mapDispatchToProps)(Cam)
 
 const style = StyleSheet.create({
