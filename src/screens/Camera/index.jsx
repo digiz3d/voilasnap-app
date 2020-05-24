@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { setCurrentSnap } from '../../reducers/messages'
 
-import SnapPreview from './components/SnapPreview'
+import SnapPreview from './containers/SnapPreview'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
@@ -24,10 +24,7 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
     })()
   }, [])
 
-  if (hasPermission === null) {
-    return <View />
-  }
-  if (hasPermission === false) {
+  if (hasPermission === null || hasPermission === false) {
     return <Text>No access to camera</Text>
   }
 
@@ -40,18 +37,18 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
   }
 
   const takePicture = async () => {
-    try {
-      if (cameraRef.current) {
+    if (cameraRef.current) {
+      try {
         const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.5,
+          quality: 0.6,
           base64: true,
           exif: false,
           onPictureSaved: undefined,
         })
         setCurrentSnap(photo)
+      } catch (e) {
+        console.warn(e)
       }
-    } catch (e) {
-      console.warn(e)
     }
   }
 
