@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
-import { Image, StyleSheet, Text } from 'react-native'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import Animated, {
   block,
   Clock,
   clockRunning,
+  concat,
   cond,
   debug,
   Easing,
@@ -28,7 +29,7 @@ function runTransition(value, dest) {
   }
 
   const config = {
-    duration: 500,
+    duration: 250,
     toValue: new Value(0),
     easing: Easing.inOut(Easing.ease),
   }
@@ -60,43 +61,51 @@ function runTransition(value, dest) {
 }
 
 const SnapPreview = ({ onCancel, onSend, snap }) => {
-  const transition = useRef(new Value(0)).current
+  const [snapCopy, setSnapCopy] = useState(snap)
+  const transition = useMemo(() => new Value(0), [])
   const opacity = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [0.5, 1],
+    outputRange: [0, 1],
     extrapolate: Extrapolate.CLAMP,
   })
-
-  const translateY = interpolate(transition, {
-    inputRange: [0, 1],
-    outputRange: [0, 200],
-    extrapolate: Extrapolate.CLAMP,
-  })
+  const rotateY = concat(
+    interpolate(transition, {
+      inputRange: [0, 1],
+      outputRange: [-90, 0],
+      extrapolate: Extrapolate.CLAMP,
+    }),
+    'deg',
+  )
 
   useCode(() => set(transition, runTransition(transition, snap !== null ? 1 : 0)), [snap])
+  useEffect(() => {
+    if (snap) setSnapCopy(snap)
+    else setTimeout(() => setSnapCopy(snap), 250)
+  }, [snap])
 
-  if (!snap) return null
+  if (!snapCopy) return null
 
   return (
-    <Animated.View style={[style.bg, { opacity }]}>
+    <Animated.View
+      style={[style.bg, { opacity, transform: [{ perspective: 500 }, { rotateY }], zIndex: 1000 }]}>
       <Image
-        source={{ uri: snap.uri }}
-        width={snap.width}
-        height={snap.height}
+        source={{ uri: snapCopy.uri }}
+        width={snapCopy.width}
+        height={snapCopy.height}
         fadeDuration={0}
         resizeMode="cover"
         style={style.img}
       />
-      <Animated.View style={{ transform: [{ translateY }] }}>
+      <View>
+        <TouchableWithoutFeedback style={style.txt} onPress={() => onCancel()}>
+          <Text>Cancel</Text>
+        </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
           style={style.txt}
           onPress={() => onSend('5eb5c305070721001b4a3e3f')}>
           <Text>Send the snap</Text>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback style={style.txt} onPress={() => onCancel()}>
-          <Text>Cancel</Text>
-        </TouchableWithoutFeedback>
-      </Animated.View>
+      </View>
     </Animated.View>
   )
 }
