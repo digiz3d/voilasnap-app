@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { setCurrentSnap } from '../../reducers/messages'
 
 import SnapPreview from './containers/SnapPreview'
+import RecipientSelection from './containers/RecipientSelection'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
@@ -44,6 +45,7 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
           base64: true,
           exif: false,
           onPictureSaved: undefined,
+          skipProcessing: true,
         })
         setCurrentSnap(photo)
       } catch (e) {
@@ -93,7 +95,12 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
             </View>
             <View style={style.bottomAction}></View>
           </View>
-          <SnapPreview snap={currentSnap} onSend={sendSnap} onCancel={cancelSnap} />
+          <SnapPreview
+            snap={currentSnap}
+            onSend={sendSnap}
+            onCancel={cancelSnap}
+            RecipientSelectionComponent={RecipientSelection}
+          />
         </>
       )}
     </View>

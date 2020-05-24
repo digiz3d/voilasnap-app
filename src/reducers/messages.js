@@ -9,20 +9,22 @@ const initialState = {
   allIds: [],
   byId: {},
   currentSnap: null,
+  currentSnapRecipient: null,
 }
 
 export const cancelSnap = createAction('messages/cancel-snap')
 export const setCurrentSnap = createAction('messages/set-sending-snap-data')
+export const setCurrentSnapRecipient = createAction('messages/set-current-snap-recipient')
 
 export const sendSnap = createAsyncThunk(
-  'messages/prepare-sending-snap',
+  'messages/send-snap',
   (receiverId, { dispatch, getState, requestId }) => {
     const state = getState()
     const preparedSnap = {
       _id: requestId,
       content: selectCurrentSnap(state).base64,
       kind: 'Snap',
-      receiverId,
+      receiverId: selectCurrentSnapRecipient(state),
       senderId: selectMyId(state),
       sentAt: Date.now(),
     }
@@ -30,13 +32,15 @@ export const sendSnap = createAsyncThunk(
   },
 )
 
-export const sendPreparedSnap = createAsyncThunk('messages/send-snap', (snap, { getState }) =>
-  apiRequest(getState, {
-    url: `/users/${snap.receiverId}/message`,
-    method: 'POST',
-    data: { image: snap.content },
-    timeout: 200000,
-  }),
+export const sendPreparedSnap = createAsyncThunk(
+  'messages/send-snap-step-2',
+  (snap, { getState }) =>
+    apiRequest(getState, {
+      url: `/users/${snap.receiverId}/message`,
+      method: 'POST',
+      data: { image: snap.content },
+      timeout: 200000,
+    }),
 )
 
 const messagesReducer = createReducer(initialState, {
@@ -83,20 +87,22 @@ const messagesReducer = createReducer(initialState, {
       },
     }
   },
-  [sendSnap.fulfilled](state, { payload }) {
-    return {
-      ...state,
-      currentSnap: payload,
-    }
-  },
   [setCurrentSnap](state, { payload }) {
     return {
       ...state,
       currentSnap: payload,
+      currentSnapRecipient: null,
+    }
+  },
+  [setCurrentSnapRecipient](state, { payload }) {
+    return {
+      ...state,
+      currentSnapRecipient: state.currentSnapRecipient === payload ? null : payload,
     }
   },
 })
 
 export const selectCurrentSnap = (state) => state.messages.currentSnap
+export const selectCurrentSnapRecipient = (state) => state.messages.currentSnapRecipient
 
 export default messagesReducer

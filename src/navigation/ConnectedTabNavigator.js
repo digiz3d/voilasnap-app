@@ -16,7 +16,7 @@ const ConnectedTabNavigator = ({ fetchFriends, fetchMe }) => {
   }, [])
 
   return (
-    <Tab.Navigator keyboardDismissMode="on-drag" initialRouteName="Chat" tabBar={() => null}>
+    <Tab.Navigator keyboardDismissMode="on-drag" initialRouteName="Camera" tabBar={() => null}>
       <Tab.Screen name="Chat" component={Chat} />
       <Tab.Screen name="Camera" component={Camera} />
       <Tab.Screen name="Friends" component={Friends} />

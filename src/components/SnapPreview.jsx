@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import Animated, {
   block,
   Clock,
@@ -58,7 +58,15 @@ function runTransition(value, dest) {
   ])
 }
 
-const SnapPreview = ({ onCancel, onSend, snap }) => {
+const SnapPreview = ({
+  RecipientSelectionComponent,
+  currentSnapRecipient,
+  isSelectingRecipient,
+  onCancel,
+  onSend,
+  setIsSelectingRecipient,
+  snap,
+}) => {
   const [snapCopy, setSnapCopy] = useState(snap)
   const transition = useMemo(() => new Value(0), [])
 
@@ -99,16 +107,37 @@ const SnapPreview = ({ onCancel, onSend, snap }) => {
         resizeMode="cover"
         style={style.img}
       />
-      <View style={style.bottom}>
-        <TouchableWithoutFeedback style={style.btn} onPress={() => onCancel()}>
-          <Text style={style.btnText}>Cancel</Text>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback
-          style={style.btn}
-          onPress={() => onSend('5eb5c305070721001b4a3e3f')}>
-          <Text style={style.btnText}>Send</Text>
-        </TouchableWithoutFeedback>
+      <View style={[style.bottom, isSelectingRecipient && style.translucent]}>
+        {isSelectingRecipient ? (
+          <>
+            <TouchableWithoutFeedback
+              style={style.btn}
+              onPress={() => setIsSelectingRecipient(false)}>
+              <Text style={style.btnText}>Back</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              style={style.btn}
+              onPress={() => onSend()}
+              disabled={currentSnapRecipient === null}>
+              {currentSnapRecipient !== null && <Text style={style.btnText}>Send</Text>}
+            </TouchableWithoutFeedback>
+          </>
+        ) : (
+          <>
+            <TouchableWithoutFeedback style={style.btn} onPress={() => onCancel()}>
+              <Text style={style.btnText}>Cancel</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              onPress={() => setIsSelectingRecipient(true)}
+              style={style.btn}>
+              <Text style={style.btnText}>Next</Text>
+            </TouchableWithoutFeedback>
+          </>
+        )}
       </View>
+      <SafeAreaView style={[style.top, isSelectingRecipient && style.translucent]}>
+        {isSelectingRecipient && <RecipientSelectionComponent />}
+      </SafeAreaView>
     </Animated.View>
   )
 }
@@ -118,10 +147,10 @@ export default SnapPreview
 const style = StyleSheet.create({
   bg: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'orange',
     zIndex: 1000,
     flexDirection: 'column-reverse',
   },
+  top: { flexGrow: 1 },
   bottom: {
     flexDirection: 'row',
     position: 'relative',
@@ -129,7 +158,18 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  img: { ...StyleSheet.absoluteFill },
-  btn: { margin: 30, padding: 30 },
-  btnText: { color: '#fff', fontSize: 18 },
+  translucent: {
+    backgroundColor: '#333C',
+  },
+  img: {
+    ...StyleSheet.absoluteFill,
+  },
+  btn: {
+    margin: 30,
+    padding: 30,
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 18,
+  },
 })
