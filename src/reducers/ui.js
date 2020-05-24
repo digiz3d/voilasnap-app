@@ -2,19 +2,22 @@ import { createAction, createReducer } from '@reduxjs/toolkit'
 
 const initialState = {
   isUserSearchMode: false,
+  userSearchString: '',
 }
 
-export const setIsUserSearchMode = createAction('ui/searchmode')
+export const setUserSearchString = createAction('ui/set-user-search-string')
 
 const ui = createReducer(initialState, {
-  [setIsUserSearchMode](state, { payload }) {
+  [setUserSearchString](state, { payload }) {
     return {
       ...state,
-      isUserSearchMode: payload,
+      userSearchString: payload,
+      isUserSearchMode: !!payload.length,
     }
   },
 })
 
 export const selectIsUserSearchMode = (state) => state.ui.isUserSearchMode
+export const selectUserSearchString = (state) => state.ui.userSearchString
 
 export default ui

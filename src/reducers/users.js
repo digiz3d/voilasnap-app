@@ -3,7 +3,7 @@ import { createAsyncThunk, createReducer, createSelector } from '@reduxjs/toolki
 import apiRequest from '../utils/api-request'
 import { uniqAdd } from '../utils/uniq'
 
-import { setIsUserSearchMode } from './ui'
+import { selectUserSearchString } from './ui'
 
 const initialState = {
   allIds: [],
@@ -28,6 +28,9 @@ export const fetchFriends = createAsyncThunk('users/get-friends', async (_, { ge
 )
 
 export const searchUsers = createAsyncThunk('users/search', async (username, { getState }) => {
+  if (!username.length) {
+    return { users: [] }
+  }
   if (username.length < 3) return { users: [] }
   return apiRequest(getState, {
     url: '/users/search',
@@ -110,9 +113,6 @@ const usersReducer = createReducer(initialState, {
   [searchUsers.rejected](state, { error }) {
     return { ...state, isErrorSearch: true, isLoadingSearch: false, error }
   },
-  [setIsUserSearchMode](state) {
-    return { ...state, searchList: [] }
-  },
   [addFriend.fulfilled](state, { payload }) {
     const { isFriend, isReceived, isSent } = state.byId[payload]
     const newAttr = {}
@@ -162,6 +162,24 @@ export const selectMe = createSelector([selectMyId, selectUsersById], (myId, use
 export const selectSearchedUsers = createSelector(
   [selectSearchUserIds, selectUsersById],
   (searchedIds, usersById) => searchedIds.map((id) => usersById[id]),
+)
+
+export const selectFriendsMatchingUsername = createSelector(
+  [selectMyFriends, selectUserSearchString],
+  (friends, searchString) =>
+    friends.filter((friend) =>
+      new RegExp(`^${searchString.replace(/[^a-zA-Z0-9]/g, '.')}`, 'i').test(friend.username),
+    ),
+)
+
+export const selectFriendsAndSearchedUsersMatching = createSelector(
+  [selectFriendsMatchingUsername, selectSearchedUsers],
+  (friendsMatchingUsername, searchedUsers) =>
+    friendsMatchingUsername.concat(
+      searchedUsers.filter(
+        (user) => !friendsMatchingUsername.map((friend) => friend._id).includes(user._id),
+      ),
+    ),
 )
 
 export default usersReducer
