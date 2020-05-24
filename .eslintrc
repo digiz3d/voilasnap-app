@@ -3,13 +3,20 @@
   "parser": "babel-eslint",
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "plugin:react/recommended"
   ],
   "plugins": ["react", "import", "sort-destructure-keys"],
   "parserOptions": { "ecmaVersion": 2020, "sourceType": "module", "ecmaFeatures": { "jsx": true } },
-  "settings": { "react": { "version": "detect" } },
+  "settings": {
+    "react": { "version": "detect" },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  },
   "rules": {
     "prefer-template": "error",
     "object-shorthand": "error",

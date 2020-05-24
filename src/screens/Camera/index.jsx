@@ -4,8 +4,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { cancelSnap, selectCurrentSnap, sendSnap, setCurrentSnap } from '../../reducers/messages'
-import SnapPreview from '../../components/SnapPreview'
+import { setCurrentSnap } from '../../reducers/messages'
+
+import SnapPreview from './components/SnapPreview'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
@@ -102,11 +103,9 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  currentSnap: selectCurrentSnap(state),
-})
+const mapStateToProps = null
 
-const mapDispatchToProps = { cancelSnap, sendSnap, setCurrentSnap }
+const mapDispatchToProps = { setCurrentSnap }
 export default connect(mapStateToProps, mapDispatchToProps)(Cam)
 
 const style = StyleSheet.create({
