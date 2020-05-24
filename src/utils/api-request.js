@@ -8,7 +8,7 @@ const axiosConf = axios.create({
   timeout: 5000,
 })
 
-const apiRequest = async (getState, { data = null, method = 'GET', url }) => {
+const apiRequest = async (getState, { data = null, method = 'GET', timeout = null, url }) => {
   const state = getState()
 
   const headers = {}
@@ -18,8 +18,10 @@ const apiRequest = async (getState, { data = null, method = 'GET', url }) => {
   }
 
   headers['Client-Version'] = version
-
-  const { data: responseData } = await axiosConf({ data, headers, method, url })
+  const queryConf = { headers, method, url }
+  if (data) queryConf.data = data
+  if (timeout) queryConf.timeout = timeout
+  const { data: responseData } = await axiosConf(queryConf)
   return responseData
 }
 

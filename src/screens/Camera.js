@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
 import { Camera } from 'expo-camera'
+import { connect } from 'react-redux'
+import { StyleSheet, Text, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { prepareSnap, setCurrentSnapData } from '../reducers/messages'
 
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
 
-export default function Cam() {
+const Cam = ({ prepareSnap, setCurrentSnapData }) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
@@ -25,6 +29,31 @@ export default function Cam() {
     return <Text>No access to camera</Text>
   }
 
+  const switchCameraSide = () => {
+    setCameraSide(
+      cameraSide === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back,
+    )
+  }
+
+  const takePicture = async () => {
+    try {
+      if (cameraRef.current) {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.5,
+          base64: true,
+          exif: false,
+          onPictureSaved: undefined,
+        })
+        setCurrentSnapData(photo.base64)
+        prepareSnap()
+      }
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+
   const height = availableSpace.height
   const width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
 
@@ -32,7 +61,7 @@ export default function Cam() {
 
   return (
     <View
-      style={{ flex: 1 }}
+      style={style.screen}
       onLayout={(e) =>
         setAvailableSpace({
           height: e.nativeEvent.layout.height,
@@ -51,35 +80,55 @@ export default function Cam() {
             type={cameraSide}
             ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
             ref={cameraRef}
+            onCameraReady={() => console.log('camera ready !')}
           />
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'transparent',
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-              justifyContent: 'space-between',
-            }}>
-            <TouchableOpacity
-              style={{
-                flex: 0.1,
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                setCameraSide(
-                  cameraSide === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back,
-                )
-              }}>
-              <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Flip</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>Take picture</Text>
-            </TouchableOpacity>
+          <View style={style.bottom}>
+            <View style={style.bottomAction}>
+              <TouchableOpacity onPress={switchCameraSide}>
+                <Text style={style.cameraSwitch}>Flip</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={style.bottomAction}>
+              <TouchableOpacity onPress={takePicture}>
+                <View style={style.aperture} />
+              </TouchableOpacity>
+            </View>
+            <View style={style.bottomAction}></View>
           </View>
         </>
       )}
     </View>
   )
 }
+
+const mapStateToProps = null
+const mapDispatchToProps = { prepareSnap, setCurrentSnapData }
+export default connect(mapStateToProps, mapDispatchToProps)(Cam)
+
+const style = StyleSheet.create({
+  screen: { flex: 1, flexDirection: 'column-reverse' },
+  bottom: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'relative',
+    height: 200,
+  },
+  bottomAction: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aperture: {
+    borderRadius: 100,
+    borderWidth: 7,
+    borderColor: '#7f7f7f',
+    height: 70,
+    width: 70,
+  },
+  cameraSwitch: {
+    padding: 20,
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'white',
+  },
+})

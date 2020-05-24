@@ -1,15 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import auth from './auth'
+import messages from './messages'
 import ui from './ui'
 import users from './users'
-import snaps from './snaps'
 
 const reducer = combineReducers({
   auth,
+  messages,
   ui,
   users,
-  snaps,
 })
 
 export default configureStore({ reducer })

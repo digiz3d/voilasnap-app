@@ -154,6 +154,8 @@ export const selectMyFriends = createSelector([selectUsers], (users) =>
   users.filter(({ isFriend }) => isFriend),
 )
 
+export const selectFirstFriend = createSelector([selectMyFriends], (friends) => friends[0])
+
 export const selectMe = createSelector([selectMyId, selectUsersById], (myId, usersById) => {
   if (myId && usersById[myId]) return usersById[myId]
   else return null
