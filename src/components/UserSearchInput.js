@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native'
 
 function debounce(func) {
   let timeout
@@ -11,25 +11,57 @@ function debounce(func) {
   }
 }
 
-const UserSearchInput = ({ onChangeText }) => {
-  const delayedOnChangeText = useRef(debounce(onChangeText)).current
+const UserSearchInput = ({ onChangeText, onSearch, text }) => {
+  const delayedSearch = useRef(debounce(onSearch)).current
 
   return (
-    <View>
+    <View style={style.container}>
       <TextInput
-        style={style.input}
-        placeholder="username"
-        autoFocus
-        onChangeText={delayedOnChangeText}
         autoCapitalize="none"
+        autoCompleteType="username"
+        clearButtonMode="always"
+        onChangeText={(text) => {
+          onChangeText(text)
+          delayedSearch(text)
+        }}
+        placeholder="Search"
+        style={style.input}
+        value={text}
       />
+      {Platform.OS === 'android' && text.length > 0 && (
+        <Text onPress={() => onChangeText('')} style={style.clear}>
+          x
+        </Text>
+      )}
     </View>
   )
 }
 export default UserSearchInput
 
 const style = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   input: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    flexGrow: 1,
+    height: 40,
     padding: 10,
+  },
+  clear: {
+    backgroundColor: '#cccc',
+    borderRadius: 30,
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    height: 15,
+    lineHeight: 15,
+    paddingHorizontal: 5,
+    position: 'absolute',
+    right: 10,
+    textAlign: 'center',
+    width: 15,
   },
 })
