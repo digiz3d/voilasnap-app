@@ -57,6 +57,9 @@ const Login = (props) => {
         <TouchableHighlight onPress={onSubmit} style={style.submitButton} underlayColor="firebrick">
           <Text style={style.submitButtonText}>Sign in</Text>
         </TouchableHighlight>
+        <TouchableHighlight style={style.registerButton}>
+          <Text style={style.registerButtonText}>Register</Text>
+        </TouchableHighlight>
       </View>
     </KeyboardAvoidingView>
   )
@@ -104,26 +107,42 @@ const style = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     fontSize: 20,
-    height: 60,
+    height: 40,
     marginVertical: 10,
     textAlign: 'center',
   },
   errorMessage: {
     color: 'red',
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'center',
   },
   submitButton: {
     backgroundColor: 'red',
-    borderRadius: 100,
-    height: 60,
+    borderRadius: 15,
+    height: 40,
+    width: 120,
     justifyContent: 'center',
-    marginTop: 50,
-    marginVertical: 10,
+    marginTop: 160,
+    position: 'absolute',
+    left: 130,
   },
   submitButtonText: {
     color: 'white',
     fontSize: 20,
+    textAlign: 'center',
+  },
+  registerButton: {
+    borderRadius: 15,
+    height: 40,
+    width: 120,
+    justifyContent: 'center',
+    marginTop: 200,
+    position: 'absolute',
+    left: 130,
+  },
+  registerButtonText: {
+    color: 'white',
+    fontSize: 15,
     textAlign: 'center',
   },
 })
