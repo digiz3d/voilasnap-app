@@ -122,8 +122,8 @@ const style = StyleSheet.create({
     height: 40,
     width: 120,
     justifyContent: 'center',
-    marginTop: 160,
-    position: 'absolute',
+    marginTop: 15,
+    marginVertical: 10,
     left: 130,
   },
   submitButtonText: {
@@ -136,9 +136,9 @@ const style = StyleSheet.create({
     height: 40,
     width: 120,
     justifyContent: 'center',
-    marginTop: 200,
+    marginTop: 180,
     position: 'absolute',
-    left: 130,
+    alignSelf: 'center',
   },
   registerButtonText: {
     color: 'white',
