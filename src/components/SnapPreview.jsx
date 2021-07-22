@@ -7,7 +7,7 @@ import Animated, {
   cond,
   Easing,
   Extrapolate,
-  interpolate,
+  interpolateNode,
   set,
   startClock,
   stopClock,
@@ -70,13 +70,13 @@ const SnapPreview = ({
   const [snapCopy, setSnapCopy] = useState(snap)
   const transition = useMemo(() => new Value(0), [])
 
-  const opacity = interpolate(transition, {
+  const opacity = interpolateNode(transition, {
     inputRange: [0, 1],
     outputRange: [0, 1],
     extrapolate: Extrapolate.CLAMP,
   })
 
-  const scale = interpolate(transition, {
+  const scale = interpolateNode(transition, {
     inputRange: [0, 1],
     outputRange: [0, 1],
     extrapolate: Extrapolate.CLAMP,

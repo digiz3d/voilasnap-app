@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 
 import apiRequest from '../utils/api-request'
@@ -25,7 +25,7 @@ export const login = createAsyncThunk('auth/login', async ({ login, password }, 
   return token
 })
 
-export const loginUsingLocalstorage = () => async (dispatch) => {
+export const loginUsingLocalstorage = () => async dispatch => {
   const localJwt = await AsyncStorage.getItem('jwt')
   if (localJwt) {
     dispatch(login.fulfilled(localJwt))
