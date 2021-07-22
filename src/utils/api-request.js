@@ -4,7 +4,7 @@ import { version } from '../../package.json'
 
 const axiosConf = axios.create({
   // baseURL: 'http://localhost:3000',
-  baseURL: 'https://voilasnap.cf',
+  baseURL: 'https://api.julien.computer',
   timeout: 5000,
 })
 
