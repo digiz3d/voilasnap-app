@@ -65,7 +65,6 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, takeSnap }) => {
             type={cameraSide}
             ratio={`${FORMAT_HEIGHT}:${FORMAT_WIDTH}`}
             ref={cameraRef}
-            onCameraReady={() => console.log('camera ready !')}
           />
           <View style={style.bottom}>
             <View style={style.bottomAction}>

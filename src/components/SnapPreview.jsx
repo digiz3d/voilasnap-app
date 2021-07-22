@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import Animated, {
   block,
   Clock,
   clockRunning,
   cond,
-  Easing,
+  EasingNode,
   Extrapolate,
   interpolateNode,
   set,
@@ -29,7 +29,7 @@ function runTransition(value, dest) {
   const config = {
     duration: 250,
     toValue: new Value(0),
-    easing: Easing.inOut(Easing.ease),
+    easing: EasingNode.inOut(EasingNode.ease),
   }
 
   return block([
@@ -85,8 +85,6 @@ const SnapPreview = ({
   useCode(() => set(transition, runTransition(transition, snap !== null ? 1 : 0)), [snap])
 
   if (!snap) return null
-
-  console.log('snap', snap)
 
   return (
     <Animated.View

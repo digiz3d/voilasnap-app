@@ -3,13 +3,19 @@ import { RefreshControl, ScrollView, StyleSheet, Text } from 'react-native'
 
 import UserListItem from './UserListItem'
 
-const FriendsList = ({ fetchFriends, friends, isLoading }) => {
+const FriendsList = ({ addFriend, fetchFriends, friends, isLoading, removeFriend }) => {
   return (
     <ScrollView
       style={style.scrollView}
       refreshControl={<RefreshControl onRefresh={fetchFriends} refreshing={isLoading} />}>
       {friends.map((friend, i) => (
-        <UserListItem key={friend._id} user={friend} isFirst={i === 0} />
+        <UserListItem
+          key={friend._id}
+          user={friend}
+          isFirst={i === 0}
+          onAdd={() => addFriend(friend._id)}
+          onRemove={() => removeFriend(friend._id)}
+        />
       ))}
       {!friends.length && <Text style={style.nothing}>No friend yet ! Add some !</Text>}
     </ScrollView>
