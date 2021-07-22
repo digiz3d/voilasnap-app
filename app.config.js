@@ -4,10 +4,10 @@ const packageBundle = 'cf.voilasnap.app'
 export default {
   name: 'VoilaSnap',
   slug: 'voilasnap-app',
-  platforms: ['ios', 'android'],
   version,
   orientation: 'portrait',
   icon: './assets/icon.png',
+  userInterfaceStyle: 'automatic',
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
@@ -21,10 +21,12 @@ export default {
     bundleIdentifier: packageBundle,
     buildNumber: version,
     supportsTablet: true,
+    userInterfaceStyle: 'automatic',
   },
   android: {
     package: packageBundle,
     versionCode: 1,
     permissions: ['CAMERA'],
+    userInterfaceStyle: 'automatic',
   },
 }

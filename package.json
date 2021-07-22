@@ -29,13 +29,11 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-tab-view": "^2.14.4",
-    "react-redux": "^7.2.4",
-    "redux": "^4.1.0",
-    "redux-thunk": "^2.3.0"
+    "react-redux": "^7.2.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
-    "@types/react-native": "^0.64.12",
+    "@types/react-native": "~0.63.2",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "8.3.0",
     "eslint": "^7.31.0",
