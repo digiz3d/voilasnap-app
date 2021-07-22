@@ -4,7 +4,7 @@ import Constants from 'expo-constants'
 import { connect } from 'react-redux'
 
 import { selectMe } from '../../reducers/users'
-import { selectIsUserSearchMode } from '../../reducers/ui'
+import { selectIsUserSearchMode } from '../../reducers/ui/selectors'
 import { version } from '../../../package.json'
 
 import FriendsList from './containers/FriendsList'

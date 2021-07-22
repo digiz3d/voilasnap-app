@@ -3,7 +3,7 @@ import { createAsyncThunk, createReducer, createSelector } from '@reduxjs/toolki
 import apiRequest from '../utils/api-request'
 import { uniqAdd } from '../utils/uniq'
 
-import { selectUserSearchString } from './ui'
+import { selectUserSearchString } from './ui/selectors'
 
 const initialState = {
   allIds: [],
@@ -72,7 +72,7 @@ const usersReducer = createReducer(initialState, {
   [fetchFriends.fulfilled](state, { payload: { users } }) {
     const newUsersById = {}
 
-    users.forEach((friend) => {
+    users.forEach(friend => {
       newUsersById[friend._id] = friend
     })
 
@@ -95,19 +95,19 @@ const usersReducer = createReducer(initialState, {
   },
   [searchUsers.fulfilled](state, { payload: { users } }) {
     const newUsersById = {}
-    users.forEach((user) => {
+    users.forEach(user => {
       newUsersById[user._id] = user
     })
     return {
       ...state,
       allIds: uniqAdd(
         state.allIds,
-        users.map((user) => user._id),
+        users.map(user => user._id),
       ),
       byId: { ...state.byId, ...newUsersById },
       isErrorSearch: false,
       isLoadingSearch: false,
-      searchList: users.map((user) => user._id),
+      searchList: users.map(user => user._id),
     }
   },
   [searchUsers.rejected](state, { error }) {
@@ -142,19 +142,19 @@ const usersReducer = createReducer(initialState, {
   },
 })
 
-export const selectUserIds = (state) => state.users.allIds
-export const selectUsersById = (state) => state.users.byId
-export const selectMyId = (state) => state.users.me
-export const selectSearchUserIds = (state) => state.users.searchList
+export const selectUserIds = state => state.users.allIds
+export const selectUsersById = state => state.users.byId
+export const selectMyId = state => state.users.me
+export const selectSearchUserIds = state => state.users.searchList
 
 export const selectUsers = createSelector([selectUserIds, selectUsersById], (userIds, usersById) =>
-  userIds.map((id) => usersById[id]),
+  userIds.map(id => usersById[id]),
 )
-export const selectMyFriends = createSelector([selectUsers], (users) =>
+export const selectMyFriends = createSelector([selectUsers], users =>
   users.filter(({ isFriend }) => isFriend),
 )
 
-export const selectFirstFriend = createSelector([selectMyFriends], (friends) => friends[0])
+export const selectFirstFriend = createSelector([selectMyFriends], friends => friends[0])
 
 export const selectMe = createSelector([selectMyId, selectUsersById], (myId, usersById) => {
   if (myId && usersById[myId]) return usersById[myId]
@@ -163,13 +163,13 @@ export const selectMe = createSelector([selectMyId, selectUsersById], (myId, use
 
 export const selectSearchedUsers = createSelector(
   [selectSearchUserIds, selectUsersById],
-  (searchedIds, usersById) => searchedIds.map((id) => usersById[id]),
+  (searchedIds, usersById) => searchedIds.map(id => usersById[id]),
 )
 
 export const selectFriendsMatchingUsername = createSelector(
   [selectMyFriends, selectUserSearchString],
   (friends, searchString) =>
-    friends.filter((friend) =>
+    friends.filter(friend =>
       new RegExp(`^${searchString.replace(/[^a-zA-Z0-9]/g, '.')}`, 'i').test(friend.username),
     ),
 )
@@ -179,7 +179,7 @@ export const selectFriendsAndSearchedUsersMatching = createSelector(
   (friendsMatchingUsername, searchedUsers) =>
     friendsMatchingUsername.concat(
       searchedUsers.filter(
-        (user) => !friendsMatchingUsername.map((friend) => friend._id).includes(user._id),
+        user => !friendsMatchingUsername.map(friend => friend._id).includes(user._id),
       ),
     ),
 )

@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 
-import { login } from '../../reducers/auth'
+import login from '../../reducers/auth/actions/login'
 
 const Login = (props) => {
   const passwordRef = useRef(null)

@@ -1,19 +1,20 @@
 import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
 
-import { uniqAdd } from '../utils/uniq'
-import apiRequest from '../utils/api-request'
+import { uniqAdd } from '../../utils/uniq'
+import apiRequest from '../../utils/api-request'
+import { selectMyId } from '../users'
 
-import { selectMyId } from './users'
+import takeSnap from './actions/take-snap'
 
 const initialState = {
   allIds: [],
   byId: {},
   currentSnap: null,
+  currentSnapIsFront: false,
   currentSnapRecipient: null,
 }
 
 export const cancelSnap = createAction('messages/cancel-snap')
-export const setCurrentSnap = createAction('messages/set-sending-snap-data')
 export const setCurrentSnapRecipient = createAction('messages/set-current-snap-recipient')
 
 export const sendSnap = createAsyncThunk(
@@ -87,10 +88,11 @@ const messagesReducer = createReducer(initialState, {
       },
     }
   },
-  [setCurrentSnap](state, { payload }) {
+  [takeSnap.fulfilled](state, { payload: { isFront, snap } }) {
     return {
       ...state,
-      currentSnap: payload,
+      currentSnap: snap,
+      currentSnapIsFront: isFront,
       currentSnapRecipient: null,
     }
   },
@@ -103,6 +105,7 @@ const messagesReducer = createReducer(initialState, {
 })
 
 export const selectCurrentSnap = (state) => state.messages.currentSnap
+export const selectCurrentSnapIsFront = (state) => state.messages.currentSnapIsFront
 export const selectCurrentSnapRecipient = (state) => state.messages.currentSnapRecipient
 
 export default messagesReducer

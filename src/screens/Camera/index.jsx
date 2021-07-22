@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { setCurrentSnap } from '../../reducers/messages'
+import takeSnap from '../../reducers/messages/actions/take-snap'
 
 import SnapPreview from './containers/SnapPreview'
 import RecipientSelection from './containers/RecipientSelection'
@@ -12,7 +12,7 @@ import RecipientSelection from './containers/RecipientSelection'
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
 
-const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
+const Cam = ({ cancelSnap, currentSnap, sendSnap, takeSnap }) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
@@ -30,29 +30,14 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
   }
 
   const switchCameraSide = () => {
-    setCameraSide(
-      cameraSide === Camera.Constants.Type.back
+    setCameraSide((current) =>
+      current === Camera.Constants.Type.back
         ? Camera.Constants.Type.front
         : Camera.Constants.Type.back,
     )
   }
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.6,
-          base64: true,
-          exif: false,
-          onPictureSaved: undefined,
-          skipProcessing: true,
-        })
-        setCurrentSnap(photo)
-      } catch (e) {
-        console.warn(e)
-      }
-    }
-  }
+  const takePicture = () => takeSnap({ cameraRef, cameraSide })
 
   const height = availableSpace.height
   const width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
@@ -73,7 +58,7 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
           <Camera
             style={{
               width,
-              height: Math.floor(height),
+              height: Math.ceil(height),
               position: 'absolute',
               left: -((width - availableSpace.width) / 2),
             }}
@@ -109,7 +94,7 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, setCurrentSnap }) => {
 
 const mapStateToProps = null
 
-const mapDispatchToProps = { setCurrentSnap }
+const mapDispatchToProps = { takeSnap }
 export default connect(mapStateToProps, mapDispatchToProps)(Cam)
 
 const style = StyleSheet.create({
@@ -117,7 +102,6 @@ const style = StyleSheet.create({
   bottom: {
     flexDirection: 'row',
     justifyContent: 'center',
-    position: 'relative',
     height: 200,
   },
   bottomAction: {

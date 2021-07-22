@@ -66,8 +66,8 @@ const SnapPreview = ({
   onSend,
   setIsSelectingRecipient,
   snap,
+  snapIsFront,
 }) => {
-  const [snapCopy, setSnapCopy] = useState(snap)
   const transition = useMemo(() => new Value(0), [])
 
   const opacity = interpolateNode(transition, {
@@ -83,12 +83,10 @@ const SnapPreview = ({
   })
 
   useCode(() => set(transition, runTransition(transition, snap !== null ? 1 : 0)), [snap])
-  useEffect(() => {
-    if (snap) setSnapCopy(snap)
-    else setTimeout(() => setSnapCopy(snap), 250)
-  }, [snap])
 
-  if (!snapCopy) return null
+  if (!snap) return null
+
+  console.log('snap', snap)
 
   return (
     <Animated.View
@@ -100,12 +98,12 @@ const SnapPreview = ({
         },
       ]}>
       <Image
-        source={{ uri: snapCopy.uri }}
-        width={snapCopy.width}
-        height={snapCopy.height}
+        source={{ uri: snap.uri }}
+        width={snap.width}
+        height={snap.height}
         fadeDuration={0}
         resizeMode="cover"
-        style={style.img}
+        style={[style.img, { transform: [{ scaleX: snapIsFront ? -1 : 1 }] }]}
       />
       <View style={[style.bottom, isSelectingRecipient && style.translucent]}>
         {isSelectingRecipient ? (

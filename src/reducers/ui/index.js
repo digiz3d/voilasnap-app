@@ -1,6 +1,6 @@
 import { createAction, createReducer } from '@reduxjs/toolkit'
 
-import { setCurrentSnap } from './messages'
+import takeSnap from '../messages/actions/take-snap'
 
 const initialState = {
   isSelectingRecipient: false,
@@ -18,7 +18,7 @@ const ui = createReducer(initialState, {
       isSelectingRecipient: payload,
     }
   },
-  [setCurrentSnap](state) {
+  [takeSnap.fulfilled](state) {
     return {
       ...state,
       isSelectingRecipient: false,
@@ -32,9 +32,5 @@ const ui = createReducer(initialState, {
     }
   },
 })
-
-export const selectIsSelectingRecipient = (state) => state.ui.isSelectingRecipient
-export const selectIsUserSearchMode = (state) => state.ui.isUserSearchMode
-export const selectUserSearchString = (state) => state.ui.userSearchString
 
 export default ui

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { useEffect } from 'react'
 
-import { loginUsingLocalstorage } from '../reducers/auth'
+import loginUsingLocalstorage from '../reducers/auth/actions/loginUsingAsyncStorage'
 
 const AuthLoading = ({ isLoginReady, loginUsingLocalstorage, setIsReady }) => {
   useEffect(() => {
