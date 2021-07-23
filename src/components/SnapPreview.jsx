@@ -1,62 +1,12 @@
-import React, { useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import Animated, {
-  block,
-  Clock,
-  clockRunning,
-  cond,
-  EasingNode,
-  Extrapolate,
-  interpolateNode,
-  set,
-  startClock,
-  stopClock,
-  timing,
-  useCode,
-  Value,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-
-function runTransition(value, dest) {
-  const clock = new Clock()
-  const state = {
-    finished: new Value(0),
-    position: new Value(0),
-    time: new Value(0),
-    frameTime: new Value(0),
-  }
-
-  const config = {
-    duration: 250,
-    toValue: new Value(0),
-    easing: EasingNode.inOut(EasingNode.ease),
-  }
-
-  return block([
-    cond(
-      clockRunning(clock),
-      [
-        // if the clock is already running we update the toValue, in case a new dest has been passed in
-        set(config.toValue, dest),
-      ],
-      [
-        // if the clock isn't running we reset all the animation params and start the clock
-        set(state.finished, 0),
-        set(state.time, 0),
-        set(state.position, value),
-        set(state.frameTime, 0),
-        set(config.toValue, dest),
-        startClock(clock),
-      ],
-    ),
-    // we run the step here that is going to update position
-    timing(clock, state, config),
-    // if the animation is over we stop the clock
-    cond(state.finished, stopClock(clock)),
-    // we made the block return the updated position
-    state.position,
-  ])
-}
 
 const SnapPreview = ({
   RecipientSelectionComponent,
@@ -68,33 +18,28 @@ const SnapPreview = ({
   snap,
   snapIsFront,
 }) => {
-  const transition = useMemo(() => new Value(0), [])
+  const transition = useSharedValue(0)
 
-  const opacity = interpolateNode(transition, {
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-    extrapolate: Extrapolate.CLAMP,
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(transition.value, { duration: 500, easing: Easing.linear }),
+      transform: [
+        {
+          scale: withTiming(transition.value, { duration: 500, easing: Easing.linear }),
+        },
+      ],
+    }
   })
 
-  const scale = interpolateNode(transition, {
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-    extrapolate: Extrapolate.CLAMP,
-  })
-
-  useCode(() => set(transition, runTransition(transition, snap !== null ? 1 : 0)), [snap])
+  useEffect(() => {
+    if (snap) transition.value = 1
+    else transition.value = 0
+  }, [snap])
 
   if (!snap) return null
 
   return (
-    <Animated.View
-      style={[
-        style.bg,
-        {
-          opacity,
-          transform: [{ scale }],
-        },
-      ]}>
+    <Animated.View style={[style.bg, animatedStyle]}>
       <Image
         source={{ uri: snap.uri }}
         width={snap.width}
@@ -120,7 +65,12 @@ const SnapPreview = ({
           </>
         ) : (
           <>
-            <TouchableWithoutFeedback style={style.btn} onPress={() => onCancel()}>
+            <TouchableWithoutFeedback
+              style={style.btn}
+              onPress={() => {
+                transition.value = 0
+                setTimeout(() => onCancel(), 1000)
+              }}>
               <Text style={style.btnText}>Cancel</Text>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback
