@@ -6,10 +6,10 @@ import {
   selectCurrentSnap,
   selectCurrentSnapIsFront,
   selectCurrentSnapRecipient,
-  sendSnap,
 } from '../../../reducers/messages'
 import { selectIsSelectingRecipient } from '../../../reducers/ui/selectors'
 import { setIsSelectingRecipient } from '../../../reducers/ui'
+import sendSnap from '../../../reducers/messages/actions/send-snap'
 
 const mapStateToProps = (state) => ({
   currentSnapRecipient: selectCurrentSnapRecipient(state),

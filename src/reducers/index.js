@@ -12,4 +12,12 @@ const reducer = combineReducers({
   users,
 })
 
-export default configureStore({ reducer })
+const logger = () => (next) => (action) => {
+  console.log('action.type', action.type)
+  return next(action)
+}
+
+export default configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+})

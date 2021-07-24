@@ -1,5 +1,5 @@
 import { Camera } from 'expo-camera'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useEffect, useRef, useState } from 'react'
@@ -12,17 +12,19 @@ import RecipientSelection from './containers/RecipientSelection'
 const FORMAT_HEIGHT = 4
 const FORMAT_WIDTH = 3
 
-const Cam = ({ cancelSnap, currentSnap, sendSnap, takeSnap }) => {
+const Cam = ({ currentSnap }) => {
+  const dispatch = useDispatch()
   const [hasPermission, setHasPermission] = useState(null)
   const [cameraSide, setCameraSide] = useState(Camera.Constants.Type.back)
   const [availableSpace, setAvailableSpace] = useState({ height: 0, width: 0 })
   const cameraRef = useRef()
 
   useEffect(() => {
-    ;(async () => {
+    async function handlePermission() {
       const { status } = await Camera.requestPermissionsAsync()
       setHasPermission(status === 'granted')
-    })()
+    }
+    handlePermission()
   }, [])
 
   if (hasPermission === null || hasPermission === false) {
@@ -37,7 +39,7 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, takeSnap }) => {
     )
   }
 
-  const takePicture = () => takeSnap({ cameraRef, cameraSide })
+  const takePicture = () => dispatch(takeSnap({ cameraRef, cameraSide }))
 
   const height = availableSpace.height
   const width = (height * FORMAT_WIDTH) / FORMAT_HEIGHT
@@ -79,22 +81,14 @@ const Cam = ({ cancelSnap, currentSnap, sendSnap, takeSnap }) => {
             </View>
             <View style={style.bottomAction}></View>
           </View>
-          <SnapPreview
-            snap={currentSnap}
-            onSend={sendSnap}
-            onCancel={cancelSnap}
-            RecipientSelectionComponent={RecipientSelection}
-          />
+          <SnapPreview snap={currentSnap} RecipientSelectionComponent={RecipientSelection} />
         </>
       )}
     </View>
   )
 }
 
-const mapStateToProps = null
-
-const mapDispatchToProps = { takeSnap }
-export default connect(mapStateToProps, mapDispatchToProps)(Cam)
+export default Cam
 
 const style = StyleSheet.create({
   screen: { flex: 1, flexDirection: 'column-reverse' },

@@ -1,9 +1,8 @@
-import { createAction, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
+import { createAction, createReducer } from '@reduxjs/toolkit'
 
 import { uniqAdd } from '../../utils/uniq'
-import apiRequest from '../../utils/api-request'
-import { selectMyId } from '../users'
 
+import sendPreparedSnap from './actions/send-snap-2'
 import takeSnap from './actions/take-snap'
 
 const initialState = {
@@ -16,33 +15,6 @@ const initialState = {
 
 export const cancelSnap = createAction('messages/cancel-snap')
 export const setCurrentSnapRecipient = createAction('messages/set-current-snap-recipient')
-
-export const sendSnap = createAsyncThunk(
-  'messages/send-snap',
-  (receiverId, { dispatch, getState, requestId }) => {
-    const state = getState()
-    const preparedSnap = {
-      _id: requestId,
-      content: selectCurrentSnap(state).base64,
-      kind: 'Snap',
-      receiverId: selectCurrentSnapRecipient(state),
-      senderId: selectMyId(state),
-      sentAt: Date.now(),
-    }
-    dispatch(sendPreparedSnap(preparedSnap))
-  },
-)
-
-export const sendPreparedSnap = createAsyncThunk(
-  'messages/send-snap-step-2',
-  (snap, { getState }) =>
-    apiRequest(getState, {
-      url: `/users/${snap.receiverId}/message`,
-      method: 'POST',
-      data: { image: snap.content },
-      timeout: 200000,
-    }),
-)
 
 const messagesReducer = createReducer(initialState, {
   [cancelSnap](state) {
